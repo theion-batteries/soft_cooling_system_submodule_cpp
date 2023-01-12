@@ -41,7 +41,7 @@ find_package(yaml-cpp CONFIG REQUIRED)
 #        install(TARGETS yaml-cpp)  
 #endif()
 
-#add_subdirectory(tests)
+add_subdirectory(dependencies/software_printhead_module)
 
 add_definitions(-D_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING)  
 add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)  
@@ -62,8 +62,7 @@ find_file(ph_config
 find_package(Python3 REQUIRED COMPONENTS Interpreter Development )
 
 message("found python interpreter: ${Python3_EXECUTABLE}")
-message("found whs config file: ${whs_config}")        
-message("found python script delta server: ${delta_server}")
+message("found ph config file: ${ph_config}")        
 
 #write_file(${whs_config} "interpreter: \"${Python3_EXECUTABLE}\"" APPEND)
 #write_file(${whs_config} "script: \"${delta_server}\"" APPEND)
@@ -100,8 +99,8 @@ file(GLOB lib_SRCS
 add_library(ph_cooling_static STATIC ${lib_SRCS})
 # link againt static lib
 target_link_libraries(ph_cooling_static 
-# keyence interface lib
-#PUBLIC keyence_lib_static
+# ph interface lib
+PUBLIC ph_interface_lib
 # sockpp lib
 PUBLIC ${SOCKPP_LIBRARIES}
 #yaml lib
@@ -114,7 +113,7 @@ target_include_directories(ph_cooling_static
 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes/
 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tests/
 
-#PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib_keyence_sdk/includes
+PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/software_printhead_module/includes
 PUBLIC ${SOCKPP_INCLUDE_DIRS}
 PRIVATE ${Python_INCLUDE_DIRS}
 
@@ -124,10 +123,10 @@ target_link_directories(ph_cooling_static PRIVATE
 
 ############################# install target lib ########################################
 INSTALL(FILES ${WHS_CONFIG_BUILD} DESTINATION config/)
-message("config file whs copied from ${WHS_CONFIG_BUILD} to: ${CMAKE_INSTALL_PREFIX}/config/")
-set(WHS_CONFIG "${CMAKE_INSTALL_PREFIX}/config/whs_config.yaml")
-add_definitions(-DWHS_CONFIG="${WHS_CONFIG}") 
-message("config file is copied to ${WHS_CONFIG}")
+message("config file whs copied from ${PH_CONFIG_BUILD} to: ${CMAKE_INSTALL_PREFIX}/config/")
+set(WHS_CONFIG "${CMAKE_INSTALL_PREFIX}/config/ph_config.yaml")
+add_definitions(-DPH_CONFIG="${PH_CONFIG}") 
+message("config file is copied to ${PH_CONFIG}")
 
 install(TARGETS ph_cooling_static DESTINATION lib)
 FILE(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/includes/*.h" 
@@ -147,8 +146,8 @@ file(GLOB exe_SRCS
 add_executable(ph_cooling_exe ${exe_SRCS})
 
 target_link_libraries(ph_cooling_exe 
-# keyence interface lib
-#PUBLIC keyence_lib_static
+# ph interface lib
+PUBLIC ph_interface_lib
 # sockpp lib
 PUBLIC ${SOCKPP_LIBRARIES}
 #yaml lib
@@ -161,7 +160,7 @@ target_include_directories(ph_cooling_exe
 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes/
 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tests/
 
-#PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib_keyence_sdk/includes
+PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/software_printhead_module/includes
 PUBLIC ${SOCKPP_INCLUDE_DIRS}
 PRIVATE ${Python_INCLUDE_DIRS}
 )

@@ -1,0 +1,7 @@
+jobid: 0					# Default to 0
+jobtype: JT_PRELOAD			# Default to Preload path
+res: RES_HIGH				# Default to high resolution
+docwidth: 3508				# Default to A4 length @ 300dpi
+ncopies: 1					# Default to 1 copy of the document
+docid: 1					# Default to a document ID of 1
+int scanning: 0					# Default to not scanning
