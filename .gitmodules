@@ -1,3 +1,4 @@
 [submodule "dependencies/software_printhead_module"]
 	path = dependencies/software_printhead_module
 	url = https://github.com/theionSami/software_printhead_module.git
+	branch = dev_win_api

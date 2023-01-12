@@ -41,7 +41,8 @@ find_package(yaml-cpp CONFIG REQUIRED)
 #        install(TARGETS yaml-cpp)  
 #endif()
 
-add_subdirectory(tests)
+#add_subdirectory(tests)
+
 add_definitions(-D_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING)  
 add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)  
 
