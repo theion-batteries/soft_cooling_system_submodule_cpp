@@ -37,17 +37,12 @@
 #include "linear_motion.h"
 #endif
 
-struct cooling_config_yaml_params
-{
-  
-
-};
 
 class ph_cooling_controller
 {
 public:
      YAML::Node config;
-     cooling_config_yaml_params _whs_params;
+     PrintingParameters ph_configs;
 private:
     bool phCoolingControllerReady = false;
     std::shared_ptr< meteorAdapter> ph;

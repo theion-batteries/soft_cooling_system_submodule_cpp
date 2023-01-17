@@ -23,19 +23,19 @@ ph_cooling_controller::ph_cooling_controller()
         std::cout << line << std::endl;
     }
     config = YAML::LoadFile(PH_CONFIG);
-//
-//    _whs_params.mm_steps = config["mm_steps"].as<double>();
-//    _whs_params.mm_step_res = config["mm_step_res"].as<double>();
-//    _whs_params.ref_dis = config["ref_dis"].as<double>();
-//    _whs_params.delay_to_move_request = config["delay_to_move_request"].as<DWORD>();
-//    _whs_params.thickness = config["thickness"].as<double>();
-//    _whs_params.MaxSafePos = config["MaxSafePos"].as<double>();
-//
+
+  ph_configs.jobid = config["jobid"].as<DWORD>();
+  ph_configs.jobtype = config["jobtype"].as<DWORD>();
+  ph_configs.res = config["res"].as<DWORD>();
+  ph_configs.docwidth = config["docwidth"].as<DWORD>();
+  ph_configs.ncopies = config["ncopies"].as<DWORD>();
+  ph_configs.docid = config["docid"].as<DWORD>();
+  ph_configs.scanning = config["scanning"].as<int>();
 #endif 
-#ifdef SINK_SENSOR_MOCK
+#ifdef SINK_PH_MOCK
     ph = std::make_shared< sensorMock>();
 #else
-    ph = std::make_shared< meteorAdapter>();
+    ph = std::make_shared< meteorAdapter>(ph_configs);
 #endif
 #ifdef SINK_AXIS_MOCK
     linearMover = std::make_shared< axisMock>();
@@ -60,12 +60,13 @@ void ph_cooling_controller::reload_config_file()
         std::cout << line << std::endl;
     }
     config = YAML::LoadFile(PH_CONFIG);
-    //_whs_params.mm_steps = config["mm_steps"].as<double>();
-    //_whs_params.mm_step_res = config["mm_step_res"].as<double>();
-    //_whs_params.ref_dis = config["ref_dis"].as<double>();
-    //_whs_params.delay_to_move_request = config["delay_to_move_request"].as<DWORD>();
-    //_whs_params.thickness = config["thickness"].as<double>();
-    //_whs_params.MaxSafePos = config["MaxSafePos"].as<double>();
+   ph_configs.jobid = config["jobid"].as<DWORD>();
+  ph_configs.jobtype = config["jobtype"].as<DWORD>();
+  ph_configs.res = config["res"].as<DWORD>();
+  ph_configs.docwidth = config["docwidth"].as<DWORD>();
+  ph_configs.ncopies = config["ncopies"].as<DWORD>();
+  ph_configs.docid = config["docid"].as<DWORD>();
+  ph_configs.scanning = config["scanning"].as<int>();
 
 }
 /**************** Algorithms conntroller ***************/
