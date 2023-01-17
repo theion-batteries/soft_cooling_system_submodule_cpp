@@ -1,3 +1,8 @@
+## config file: default and user defined parameters 
+distance_to_center: 50 # after homing: go to center position where cnt dispenser will vibrate
+number_of_rotation_per_direction: 10 # frequency for dispensing
+reverse_direction: false # duration of vibration 100 ms
+path_to_upload_img: "" #optional path for img direct load
 jobid: 0					# Default to 0
 jobtype: JT_PRELOAD			# Default to Preload path
 res: RES_HIGH				# Default to high resolution

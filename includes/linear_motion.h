@@ -24,8 +24,8 @@
 
 struct whs_axis_motion_server
 {
-    const char* ip = "192.168.0.209";
-    uint16_t port = 8882;
+    const char* ip = "192.168.0.206";
+    uint16_t port = 8881;
 };
 
 

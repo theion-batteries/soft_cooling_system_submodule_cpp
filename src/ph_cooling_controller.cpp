@@ -1,12 +1,12 @@
 /**
  * @file ph_cooling_controller.cpp
  * @author your name (you@domain.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2023-01-11
- * 
+ *
  * @copyright Copyright (c) 2023
- * 
+ *
  */
 
 #include "ph_cooling_controller.h"
@@ -16,21 +16,24 @@ ph_cooling_controller::ph_cooling_controller()
 {
     std::cout << "creating subsystem wafer holder motion controller " << std::endl;
 #ifdef PH_CONFIG
-    std::cout << "loading config file: "<< PH_CONFIG<< std::endl;
+    std::cout << "loading config file: " << PH_CONFIG << std::endl;
     std::ifstream filein(PH_CONFIG);
     for (std::string line; std::getline(filein, line); )
     {
         std::cout << line << std::endl;
     }
     config = YAML::LoadFile(PH_CONFIG);
-//
-//    _whs_params.mm_steps = config["mm_steps"].as<double>();
-//    _whs_params.mm_step_res = config["mm_step_res"].as<double>();
-//    _whs_params.ref_dis = config["ref_dis"].as<double>();
-//    _whs_params.delay_to_move_request = config["delay_to_move_request"].as<DWORD>();
-//    _whs_params.thickness = config["thickness"].as<double>();
-//    _whs_params.MaxSafePos = config["MaxSafePos"].as<double>();
-//
+    _ph_params.distance_to_center = config["distance_to_center"].as<double>();
+    _ph_params.number_of_rotation_per_direction = config["number_of_rotation_per_direction"].as<int>();
+    _ph_params.reverse_direction = config["reverse_direction"].as<bool>();
+    _ph_params.path_to_upload_img = config["path_to_upload_img"].as<std::string>();
+    _ph_params.jobid = config["jobid"].as<DWORD>();
+    _ph_params.jobtype = config["jobtype"].as<DWORD>();
+    _ph_params.res = config["res"].as<DWORD>();
+    _ph_params.docwidth = config["docwidth"].as<DWORD>();
+    _ph_params.ncopies = config["ncopies"].as<DWORD>();
+    _ph_params.docid = config["docid"].as<DWORD>();
+    _ph_params.scanning = config["scanning"].as<int>();
 #endif 
 #ifdef SINK_SENSOR_MOCK
     ph = std::make_shared< sensorMock>();
@@ -53,7 +56,7 @@ ph_cooling_controller::~ph_cooling_controller()
 
 void ph_cooling_controller::reload_config_file()
 {
-    std::cout << "reloading config file: " << PH_CONFIG<<std::endl;
+    std::cout << "reloading config file: " << PH_CONFIG << std::endl;
     std::ifstream filein(PH_CONFIG);
     for (std::string line; std::getline(filein, line); )
     {
@@ -69,12 +72,30 @@ void ph_cooling_controller::reload_config_file()
 
 }
 /**************** Algorithms conntroller ***************/
-
+void ph_cooling_controller::ph_controller_connect()
+{
+    linearMover->connect();
+    rotaryMover->connect();
+    ph->connect();
+}
+void ph_cooling_controller::ph_motion_move_home()
+{
+    linearMover->move_home();
+    rotaryMover->move_home();
+}
+void ph_cooling_controller::ph_motion_move_to_center(double new_pos)
+{
+    linearMover->move_down_to(new_pos);
+}
 
 
 
 /********* helper functions */
-bool ph_cooling_controller::get_mover_status()
+bool ph_cooling_controller::get_linear_mover_status()
+{
+    return linearMover->getStatus();
+}
+bool ph_cooling_controller::get_rotary_mover_status()
 {
     return linearMover->getStatus();
 }
@@ -111,9 +132,33 @@ meteorAdapter* ph_cooling_controller::get_ph_ptr()
  */
 void ph_cooling_controller::sendDirectCmdSensor(std::string& cmd)
 {
-   // ph->sendDirectCmd(cmd);
+    // ph->sendDirectCmd(cmd);
 }
 std::string ph_cooling_controller::sendDirectCmdAxis(std::string cmd)
 {
-     return  linearMover->sendDirectCmd(cmd);
+    return  linearMover->sendDirectCmd(cmd);
+}
+
+void ph_cooling_controller::reload_config_file()
+{
+
+    std::cout << "reloading config file: " << PH_CONFIG << std::endl;
+    std::ifstream filein(PH_CONFIG);
+    for (std::string line; std::getline(filein, line); )
+    {
+        std::cout << line << std::endl;
+    }
+    config = YAML::LoadFile(PH_CONFIG);
+    _ph_params.distance_to_center = config["distance_to_center"].as<double>();
+    _ph_params.number_of_rotation_per_direction = config["number_of_rotation_per_direction"].as<int>();
+    _ph_params.reverse_direction = config["reverse_direction"].as<bool>();
+    _ph_params.path_to_upload_img = config["path_to_upload_img"].as<std::string>();
+    _ph_params.jobid = config["jobid"].as<DWORD>();
+    _ph_params.jobtype = config["jobtype"].as<DWORD>();
+    _ph_params.res = config["res"].as<DWORD>();
+    _ph_params.docwidth = config["docwidth"].as<DWORD>();
+    _ph_params.ncopies = config["ncopies"].as<DWORD>();
+    _ph_params.docid = config["docid"].as<DWORD>();
+    _ph_params.scanning = config["scanning"].as<int>();
+
 }
