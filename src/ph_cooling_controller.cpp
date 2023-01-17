@@ -45,6 +45,11 @@ ph_cooling_controller::ph_cooling_controller()
 #else
     linearMover = std::make_shared< linear_motion>();
 #endif
+#ifdef SINK_ROT_MOCK
+    linearMover = std::make_shared< axisMock>();
+#else
+    rotaryMover = std::make_shared< rotation_motion>();
+#endif
 }
 /**
  * @brief Destroy the whs controller::whs controller object
@@ -54,23 +59,6 @@ ph_cooling_controller::~ph_cooling_controller()
 {
 }
 
-void ph_cooling_controller::reload_config_file()
-{
-    std::cout << "reloading config file: " << PH_CONFIG << std::endl;
-    std::ifstream filein(PH_CONFIG);
-    for (std::string line; std::getline(filein, line); )
-    {
-        std::cout << line << std::endl;
-    }
-    config = YAML::LoadFile(PH_CONFIG);
-    //_whs_params.mm_steps = config["mm_steps"].as<double>();
-    //_whs_params.mm_step_res = config["mm_step_res"].as<double>();
-    //_whs_params.ref_dis = config["ref_dis"].as<double>();
-    //_whs_params.delay_to_move_request = config["delay_to_move_request"].as<DWORD>();
-    //_whs_params.thickness = config["thickness"].as<double>();
-    //_whs_params.MaxSafePos = config["MaxSafePos"].as<double>();
-
-}
 /**************** Algorithms conntroller ***************/
 void ph_cooling_controller::ph_controller_connect()
 {

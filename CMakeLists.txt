@@ -113,7 +113,7 @@ target_include_directories(ph_cooling_static
 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes/
 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tests/
 
-PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/software_printhead_module/includes
+PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/software_printhead_module/includes/
 PUBLIC ${SOCKPP_INCLUDE_DIRS}
 PRIVATE ${Python_INCLUDE_DIRS}
 

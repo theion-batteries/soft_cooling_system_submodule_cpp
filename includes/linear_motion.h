@@ -22,7 +22,7 @@
 #include <future>
 #include "Iaxis_motion.h"
 
-struct whs_axis_motion_server
+struct ph_linear_motion_server
 {
     const char* ip = "192.168.0.206";
     uint16_t port = 8881;
@@ -32,7 +32,7 @@ struct whs_axis_motion_server
 class linear_motion: public Iaxis_motion
 {
 private:
-  whs_axis_motion_server _motion_axis_struct;
+  ph_linear_motion_server _motion_axis_struct;
     sockpp::socket_initializer sockInit;
     sockpp::tcp_connector* axis_client_sock=nullptr;
     bool axisReady = false;
