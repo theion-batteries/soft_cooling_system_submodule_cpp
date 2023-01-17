@@ -35,10 +35,10 @@ ph_cooling_controller::ph_cooling_controller()
     _ph_params.docid = config["docid"].as<DWORD>();
     _ph_params.scanning = config["scanning"].as<int>();
 #endif 
-#ifdef SINK_SENSOR_MOCK
+#ifdef SINK_PH_MOCK
     ph = std::make_shared< sensorMock>();
 #else
-    ph = std::make_shared< meteorAdapter>();
+    ph = std::make_shared< meteorAdapter>(_ph_params);
 #endif
 #ifdef SINK_AXIS_MOCK
     linearMover = std::make_shared< axisMock>();

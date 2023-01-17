@@ -64,8 +64,8 @@ find_package(Python3 REQUIRED COMPONENTS Interpreter Development )
 message("found python interpreter: ${Python3_EXECUTABLE}")
 message("found ph config file: ${ph_config}")        
 
-#write_file(${whs_config} "interpreter: \"${Python3_EXECUTABLE}\"" APPEND)
-#write_file(${whs_config} "script: \"${delta_server}\"" APPEND)
+#write_file(${PH_config} "interpreter: \"${Python3_EXECUTABLE}\"" APPEND)
+#write_file(${PH_config} "script: \"${delta_server}\"" APPEND)
 set ( PH_CONFIG_BUILD  "${ph_config}" CACHE FILEPATH "${ph_config}")
 set ( PH_CONFIG  "${CMAKE_INSTALL_PREFIX}/config/ph_config.yaml" CACHE FILEPATH "${CMAKE_INSTALL_PREFIX}/config/ph_config.yaml")
 
@@ -122,9 +122,9 @@ target_link_directories(ph_cooling_static PRIVATE
         ${Python_LIBRARY_DIRS})
 
 ############################# install target lib ########################################
-INSTALL(FILES ${WHS_CONFIG_BUILD} DESTINATION config/)
-message("config file whs copied from ${PH_CONFIG_BUILD} to: ${CMAKE_INSTALL_PREFIX}/config/")
-set(WHS_CONFIG "${CMAKE_INSTALL_PREFIX}/config/ph_config.yaml")
+INSTALL(FILES ${PH_CONFIG_BUILD} DESTINATION config/)
+message("config file PH copied from ${PH_CONFIG_BUILD} to: ${CMAKE_INSTALL_PREFIX}/config/")
+set(PH_CONFIG "${CMAKE_INSTALL_PREFIX}/config/ph_config.yaml")
 add_definitions(-DPH_CONFIG="${PH_CONFIG}") 
 message("config file is copied to ${PH_CONFIG}")
 
