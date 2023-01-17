@@ -41,20 +41,6 @@
 #else
 #include "rotation_motion.h"
 #endif
-struct cooling_config_yaml_params
-{
-    double distance_to_center = 50; // after homing = go to center position where cnt dispenser will vibrate
-    int number_of_rotation_per_direction = 10; // frequency for dispensing
-    bool reverse_direction = false; // duration of vibration 100 ms
-    std::string path_to_upload_img = ""; //optional path for img direct load
-    DWORD jobid = 0;					// Default to 0
-    DWORD jobtype = JT_PRELOAD;			// Default to Preload path
-    DWORD res = RES_HIGH;				// Default to high resolution
-    DWORD docwidth = 3508;				// Default to A4 length @ 300dpi
-    DWORD ncopies = 1;					// Default to 1 copy of the document
-    DWORD docid = 1;					// Default to a document ID of 1
-    int scanning = 0;					// Default to not scanning
-};
 
 class ph_cooling_controller
 {

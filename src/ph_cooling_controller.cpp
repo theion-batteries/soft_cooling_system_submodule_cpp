@@ -38,7 +38,7 @@ ph_cooling_controller::ph_cooling_controller()
 #ifdef SINK_PH_MOCK
     ph = std::make_shared< sensorMock>();
 #else
-    ph = std::make_shared< meteorAdapter>(ph_configs);
+    ph = std::make_shared< meteorAdapter>(_ph_params);
 #endif
 #ifdef SINK_AXIS_MOCK
     linearMover = std::make_shared< axisMock>();
@@ -54,24 +54,7 @@ ph_cooling_controller::~ph_cooling_controller()
 {
 }
 
-void ph_cooling_controller::reload_config_file()
-{
-    std::cout << "reloading config file: " << PH_CONFIG << std::endl;
-    std::ifstream filein(PH_CONFIG);
-    for (std::string line; std::getline(filein, line); )
-    {
-        std::cout << line << std::endl;
-    }
-    config = YAML::LoadFile(PH_CONFIG);
-   ph_configs.jobid = config["jobid"].as<DWORD>();
-  ph_configs.jobtype = config["jobtype"].as<DWORD>();
-  ph_configs.res = config["res"].as<DWORD>();
-  ph_configs.docwidth = config["docwidth"].as<DWORD>();
-  ph_configs.ncopies = config["ncopies"].as<DWORD>();
-  ph_configs.docid = config["docid"].as<DWORD>();
-  ph_configs.scanning = config["scanning"].as<int>();
 
-}
 /**************** Algorithms conntroller ***************/
 void ph_cooling_controller::ph_controller_connect()
 {

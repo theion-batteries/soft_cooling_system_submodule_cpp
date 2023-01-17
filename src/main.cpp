@@ -2,5 +2,6 @@
 
 int main(){
 
-
+    ph_cooling_controller phControll;
+    
 }
