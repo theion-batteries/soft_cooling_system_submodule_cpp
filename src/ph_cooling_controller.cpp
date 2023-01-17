@@ -23,16 +23,6 @@ ph_cooling_controller::ph_cooling_controller()
         std::cout << line << std::endl;
     }
     config = YAML::LoadFile(PH_CONFIG);
-<<<<<<< HEAD
-
-  ph_configs.jobid = config["jobid"].as<DWORD>();
-  ph_configs.jobtype = config["jobtype"].as<DWORD>();
-  ph_configs.res = config["res"].as<DWORD>();
-  ph_configs.docwidth = config["docwidth"].as<DWORD>();
-  ph_configs.ncopies = config["ncopies"].as<DWORD>();
-  ph_configs.docid = config["docid"].as<DWORD>();
-  ph_configs.scanning = config["scanning"].as<int>();
-=======
     _ph_params.distance_to_center = config["distance_to_center"].as<double>();
     _ph_params.number_of_rotation_per_direction = config["number_of_rotation_per_direction"].as<int>();
     _ph_params.reverse_direction = config["reverse_direction"].as<bool>();
@@ -44,7 +34,6 @@ ph_cooling_controller::ph_cooling_controller()
     _ph_params.ncopies = config["ncopies"].as<DWORD>();
     _ph_params.docid = config["docid"].as<DWORD>();
     _ph_params.scanning = config["scanning"].as<int>();
->>>>>>> 80e4b743bfa5a9812f1fac6948a745714ac40ca0
 #endif 
 #ifdef SINK_PH_MOCK
     ph = std::make_shared< sensorMock>();

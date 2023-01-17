@@ -36,15 +36,6 @@
 #else
 #include "linear_motion.h"
 #endif
-<<<<<<< HEAD
-
-
-class ph_cooling_controller
-{
-public:
-     YAML::Node config;
-     PrintingParameters ph_configs;
-=======
 #ifdef SINK_ROT_MOCK
 #include "axisMock.h"
 #else
@@ -68,7 +59,6 @@ struct cooling_config_yaml_params
 class ph_cooling_controller
 {
 
->>>>>>> 80e4b743bfa5a9812f1fac6948a745714ac40ca0
 private:
     bool phCoolingControllerReady = false;
     std::shared_ptr< meteorAdapter> ph;
