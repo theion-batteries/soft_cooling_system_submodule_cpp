@@ -1,5 +1,5 @@
 /**
- * @file Iaxis_motion.h
+ * @file Iph_axis_motion.h
  * @author sami dhiab
  * @version 0.1
  * @date 2022-11-01
@@ -14,13 +14,13 @@
 #include "sockpp/tcp_connector.h"
 #include <iostream>
 #include "subsystem_feedback.h"
-class Iaxis_motion
+class Iph_axis_motion
 {
 private:
     /* data */
 public:
-    Iaxis_motion(/* args */);
-    virtual ~Iaxis_motion();
+    Iph_axis_motion(/* args */);
+    virtual ~Iph_axis_motion();
     virtual wgm_feedbacks::enum_sub_sys_feedback connect() = 0;
     virtual void disconnect() = 0;
     virtual void move_home() = 0;

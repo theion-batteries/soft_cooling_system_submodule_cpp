@@ -43,12 +43,12 @@ ph_cooling_controller::ph_cooling_controller()
 #ifdef SINK_AXIS_MOCK
     linearMover = std::make_shared< axisMock>();
 #else
-    linearMover = std::make_shared< linear_motion>();
+    linearMover = std::make_shared< ph_linear_motion>();
 #endif
 #ifdef SINK_ROT_MOCK
     linearMover = std::make_shared< axisMock>();
 #else
-    rotaryMover = std::make_shared< rotation_motion>();
+    rotaryMover = std::make_shared< ph_rotation_motion>();
 #endif
 }
 /**
@@ -76,6 +76,10 @@ void ph_cooling_controller::ph_motion_move_to_center(double new_pos)
     linearMover->move_down_to(new_pos);
 }
 
+double ph_cooling_controller::get_center_target_distance()
+{
+  return _ph_params.distance_to_center;
+}
 
 
 /********* helper functions */
@@ -105,9 +109,13 @@ double ph_cooling_controller::get_axis_position()
     return linearMover->get_position();
 }
 
-Iaxis_motion* ph_cooling_controller::get_axis_ptr()
+Iph_axis_motion* ph_cooling_controller::get_axis_ptr()
 {
-    return dynamic_cast<Iaxis_motion*>(linearMover.get());
+    return dynamic_cast<Iph_axis_motion*>(linearMover.get());
+}
+Iph_axis_motion* ph_cooling_controller::get_rotary_axis_ptr()
+{
+    return dynamic_cast<Iph_axis_motion*>(rotaryMover.get());
 }
 meteorAdapter* ph_cooling_controller::get_ph_ptr()
 {

@@ -7,22 +7,22 @@
  * @copyright Copyright (c) 2022
  * 
  */
-#include "rotation_motion.h"
+#include "ph_rotation_motion.h"
 
 #include <thread>
 #include <mutex>
 #include <string.h>
-rotation_motion::rotation_motion(/* args */)
+ph_rotation_motion::ph_rotation_motion(/* args */)
 {
     std::cout << "creating linear axis  client" << std::endl;
 }
 
-rotation_motion::~rotation_motion()
+ph_rotation_motion::~ph_rotation_motion()
 {
     if (axis_client_sock != nullptr) delete axis_client_sock;
 
 }
-std::string rotation_motion::sendDirectCmd(std::string cmd)
+std::string ph_rotation_motion::sendDirectCmd(std::string cmd)
 {
     if (axis_client_sock == nullptr) return "not connected";
     std::cout<< "sending linear axis command "<< cmd <<std::endl;
@@ -34,7 +34,7 @@ std::string rotation_motion::sendDirectCmd(std::string cmd)
     return waitForResponse();
 }
 
-std::string rotation_motion::waitForResponse()
+std::string ph_rotation_motion::waitForResponse()
 {
     static int attempts = 0;
     if (attempts == 10)
@@ -65,7 +65,7 @@ std::string rotation_motion::waitForResponse()
 
     }
 }
-bool rotation_motion::getStatus()
+bool ph_rotation_motion::getStatus()
 {
     return axisReady;
 }
@@ -76,14 +76,14 @@ bool rotation_motion::getStatus()
  *
  * @param new_position
  */
-void rotation_motion::move_to(int new_position)
+void ph_rotation_motion::move_to(int new_position)
 {
 
     move_up_by(new_position);
 
 }
 
-wgm_feedbacks::enum_sub_sys_feedback rotation_motion::connect()
+wgm_feedbacks::enum_sub_sys_feedback ph_rotation_motion::connect()
 {
     std::cout << "connecting controller to axis server" << std::endl;
     axis_client_sock = new sockpp::tcp_connector({ _rotation_motion_struct.ip, _rotation_motion_struct.port });
@@ -110,7 +110,7 @@ wgm_feedbacks::enum_sub_sys_feedback rotation_motion::connect()
 
 }
 
-void rotation_motion::disconnect()
+void ph_rotation_motion::disconnect()
 {
     axis_client_sock->close();
 }
@@ -121,7 +121,7 @@ void rotation_motion::disconnect()
  *
  * @return double
  */
-double rotation_motion::get_position()
+double ph_rotation_motion::get_position()
 {
     double axis_pos = 0;
     std::cout << "get axis curent position" << std::endl;
@@ -139,7 +139,7 @@ double rotation_motion::get_position()
  * @brief
  *
  */
-void rotation_motion::move_home()
+void ph_rotation_motion::move_home()
 {
     auto command = axis_cmds.find(7);
     if (command != axis_cmds.end()) {
@@ -154,19 +154,19 @@ void rotation_motion::move_home()
  * @brief
  *
  */
-void rotation_motion::get_speed()
+void ph_rotation_motion::get_speed()
 {
 
 }
-void rotation_motion::set_speed(double_t new_val)
+void ph_rotation_motion::set_speed(double_t new_val)
 {
 
 }
-void rotation_motion::move_up_to(double_t new_pos)
+void ph_rotation_motion::move_up_to(double_t new_pos)
 {
 
 }
-void rotation_motion::move_down_to(double_t new_pos)
+void ph_rotation_motion::move_down_to(double_t new_pos)
 {
     std::cout << "moving down to " << new_pos << std::endl;
     auto command = axis_cmds.find(6);
@@ -183,7 +183,7 @@ void rotation_motion::move_down_to(double_t new_pos)
  *
  * @param steps
  */
-void rotation_motion::move_up_by(double_t steps)
+void ph_rotation_motion::move_up_by(double_t steps)
 {
     std::cout << "moving up by " << steps << std::endl;
     auto command = axis_cmds.find(5);
@@ -214,7 +214,7 @@ void rotation_motion::move_up_by(double_t steps)
  *
  * @param steps
  */
-void rotation_motion::move_down_by(double_t steps)
+void ph_rotation_motion::move_down_by(double_t steps)
 {
 
     std::cout << "moving down by " << steps << std::endl;
@@ -231,7 +231,7 @@ void rotation_motion::move_down_by(double_t steps)
 
 
 
-void rotation_motion::move_center()
+void ph_rotation_motion::move_center()
 {
     auto command = axis_cmds.find(2);
     if (command != axis_cmds.end()) {
@@ -240,7 +240,7 @@ void rotation_motion::move_center()
     }
 }
 
-void rotation_motion::unlock()
+void ph_rotation_motion::unlock()
 {
     auto command = axis_cmds.find(0);
     if (command != axis_cmds.end()) {

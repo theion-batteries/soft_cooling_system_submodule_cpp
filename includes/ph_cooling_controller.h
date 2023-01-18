@@ -34,12 +34,12 @@
 #ifdef SINK_AXIS_MOCK
 #include "axisMock.h"
 #else
-#include "linear_motion.h"
+#include "ph_linear_motion.h"
 #endif
 #ifdef SINK_ROT_MOCK
 #include "axisMock.h"
 #else
-#include "rotation_motion.h"
+#include "ph_rotation_motion.h"
 #endif
 
 class ph_cooling_controller
@@ -48,8 +48,8 @@ class ph_cooling_controller
 private:
     bool phCoolingControllerReady = false;
     std::shared_ptr< meteorAdapter> ph;
-    std::shared_ptr <Iaxis_motion> linearMover;
-    std::shared_ptr <Iaxis_motion> rotaryMover;
+    std::shared_ptr <Iph_axis_motion> linearMover;
+    std::shared_ptr <Iph_axis_motion> rotaryMover;
     double current_axis_position;
     YAML::Node config;
     cooling_config_yaml_params _ph_params;
@@ -61,12 +61,7 @@ public:
     void ph_controller_connect();
     void ph_motion_move_home();
     void ph_motion_move_to_center(double new_pos);
-
-
-
-
-
-
+    double get_center_target_distance();
 
     /********* helper functions */
     bool get_linear_mover_status();
@@ -75,7 +70,8 @@ public:
     bool get_ph_cooling_controller_status();
     /*     helper getter */
     double get_axis_position();
-    Iaxis_motion* get_axis_ptr();
+    Iph_axis_motion* get_axis_ptr();
+    Iph_axis_motion* get_rotary_axis_ptr();
     meteorAdapter* get_ph_ptr();
     void sendDirectCmdSensor(std::string& cmd);
     std::string sendDirectCmdAxis(std::string cmd);

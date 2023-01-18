@@ -20,19 +20,19 @@
 #include <atomic>
 #include <queue>
 #include <future>
-#include "Iaxis_motion.h"
+#include "Iph_axis_motion.h"
 
-struct ph_rotation_motion_server
+struct ph_linear_motion_server
 {
-    const char* ip = "192.168.0.205";
+    const char* ip = "192.168.0.206";
     uint16_t port = 8881;
 };
 
 
-class rotation_motion: public Iaxis_motion
+class ph_linear_motion: public Iph_axis_motion
 {
 private:
-  ph_rotation_motion_server _rotation_motion_struct;
+  ph_linear_motion_server _motion_axis_struct;
     sockpp::socket_initializer sockInit;
     sockpp::tcp_connector* axis_client_sock=nullptr;
     bool axisReady = false;
@@ -47,8 +47,8 @@ protected:
     std::string axis_incoming_data;
     size_t axis_data_length = 1024;
 public:
-    rotation_motion();
-    virtual ~rotation_motion();
+    ph_linear_motion();
+    virtual ~ph_linear_motion();
     virtual void move_home() override;
     virtual void move_to(int new_position) override;
     virtual wgm_feedbacks::enum_sub_sys_feedback connect()override;

@@ -8,25 +8,25 @@
  *
  */
 
-#include "linear_motion.h"
+#include "ph_linear_motion.h"
 #include <thread>
 #include <mutex>
 #include <string.h>
-linear_motion::linear_motion(/* args */)
+ph_linear_motion::ph_linear_motion(/* args */)
 {
     std::cout << "creating linear axis  client" << std::endl;
 }
 
-linear_motion::~linear_motion()
+ph_linear_motion::~ph_linear_motion()
 {
     if (axis_client_sock != nullptr) delete axis_client_sock;
 
 }
-std::string linear_motion::sendDirectCmd(std::string cmd)
+std::string ph_linear_motion::sendDirectCmd(std::string cmd)
 {
     if (axis_client_sock == nullptr) return "not connected";
-    std::cout<< "sending linear axis command "<< cmd <<std::endl;
-    cmd = cmd+"\r\n";
+    std::cout << "sending linear axis command " << cmd << std::endl;
+    cmd = cmd + "\r\n";
     if (axis_client_sock->write(cmd) != ssize_t(std::string(cmd).length())) {
         std::cout << "Error writing to the TCP stream: "
             << axis_client_sock->last_error_str() << std::endl;
@@ -34,7 +34,7 @@ std::string linear_motion::sendDirectCmd(std::string cmd)
     return waitForResponse();
 }
 
-std::string linear_motion::waitForResponse()
+std::string ph_linear_motion::waitForResponse()
 {
     static int attempts = 0;
     if (attempts == 10)
@@ -65,7 +65,7 @@ std::string linear_motion::waitForResponse()
 
     }
 }
-bool linear_motion::getStatus()
+bool ph_linear_motion::getStatus()
 {
     return axisReady;
 }
@@ -76,14 +76,14 @@ bool linear_motion::getStatus()
  *
  * @param new_position
  */
-void linear_motion::move_to(int new_position)
+void ph_linear_motion::move_to(int new_position)
 {
 
     move_up_by(new_position);
 
 }
 
-wgm_feedbacks::enum_sub_sys_feedback linear_motion::connect()
+wgm_feedbacks::enum_sub_sys_feedback ph_linear_motion::connect()
 {
     std::cout << "connecting controller to axis server" << std::endl;
     axis_client_sock = new sockpp::tcp_connector({ _motion_axis_struct.ip, _motion_axis_struct.port });
@@ -110,7 +110,7 @@ wgm_feedbacks::enum_sub_sys_feedback linear_motion::connect()
 
 }
 
-void linear_motion::disconnect()
+void ph_linear_motion::disconnect()
 {
     axis_client_sock->close();
 }
@@ -121,13 +121,13 @@ void linear_motion::disconnect()
  *
  * @return double
  */
-double linear_motion::get_position()
+double ph_linear_motion::get_position()
 {
     double axis_pos = 0;
     std::cout << "get axis curent position" << std::endl;
     auto command = axis_cmds.find(1);
     std::cout << "sending command: " << command->second << '\n';
-    auto resp =sendDirectCmd(command->second);
+    auto resp = sendDirectCmd(command->second);
     std::string extracted = resp.substr(resp.find_first_of(":") + 1, resp.find_first_of(",") - 1 - resp.find_first_of(":"));
     axis_pos = std::stod(extracted); // to double
     std::cout << "filter val : " << axis_pos << std::endl;
@@ -139,14 +139,14 @@ double linear_motion::get_position()
  * @brief
  *
  */
-void linear_motion::move_home()
+void ph_linear_motion::move_home()
 {
     auto command = axis_cmds.find(7);
     if (command != axis_cmds.end()) {
         std::cout << "sending command: " << command->second << '\n';
         auto reply = sendDirectCmd(command->second);
-        
-       // if (!reply.find("ok")) return move_home();
+
+        // if (!reply.find("ok")) return move_home();
     }
 
 }
@@ -154,26 +154,26 @@ void linear_motion::move_home()
  * @brief
  *
  */
-void linear_motion::get_speed()
+void ph_linear_motion::get_speed()
 {
 
 }
-void linear_motion::set_speed(double_t new_val)
+void ph_linear_motion::set_speed(double_t new_val)
 {
 
 }
-void linear_motion::move_up_to(double_t new_pos)
+void ph_linear_motion::move_up_to(double_t new_pos)
 {
 
 }
-void linear_motion::move_down_to(double_t new_pos)
+void ph_linear_motion::move_down_to(double_t new_pos)
 {
     std::cout << "moving down to " << new_pos << std::endl;
     auto command = axis_cmds.find(6);
     if (command != axis_cmds.end()) {
         std::cout << "sending command: " << command->second << " args: " << new_pos << '\n';
         std::string args = std::to_string(new_pos);
-        auto cmd = (command->second)+args;
+        auto cmd = (command->second) + args;
         // X-Steps
         auto reply = sendDirectCmd(cmd);
     }
@@ -183,7 +183,7 @@ void linear_motion::move_down_to(double_t new_pos)
  *
  * @param steps
  */
-void linear_motion::move_up_by(double_t steps)
+void ph_linear_motion::move_up_by(double_t steps)
 {
     std::cout << "moving up by " << steps << std::endl;
     auto command = axis_cmds.find(5);
@@ -214,7 +214,7 @@ void linear_motion::move_up_by(double_t steps)
  *
  * @param steps
  */
-void linear_motion::move_down_by(double_t steps)
+void ph_linear_motion::move_down_by(double_t steps)
 {
 
     std::cout << "moving down by " << steps << std::endl;
@@ -222,7 +222,7 @@ void linear_motion::move_down_by(double_t steps)
     if (command != axis_cmds.end()) {
         std::cout << "sending command: " << command->second << " args: " << steps << '\n';
         std::string args = std::to_string(steps);
-        auto cmd = (command->second)+args;
+        auto cmd = (command->second) + args;
         // X-Steps
         auto reply = sendDirectCmd(cmd);
     }
@@ -231,7 +231,7 @@ void linear_motion::move_down_by(double_t steps)
 
 
 
-void linear_motion::move_center()
+void ph_linear_motion::move_center()
 {
     auto command = axis_cmds.find(2);
     if (command != axis_cmds.end()) {
@@ -240,7 +240,7 @@ void linear_motion::move_center()
     }
 }
 
-void linear_motion::unlock()
+void ph_linear_motion::unlock()
 {
     auto command = axis_cmds.find(0);
     if (command != axis_cmds.end()) {

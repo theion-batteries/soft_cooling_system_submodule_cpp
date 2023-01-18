@@ -86,9 +86,9 @@ endfunction()
 
 # source *.cpp
 file(GLOB lib_SRCS
-        "${PROJECT_SOURCE_DIR}/src/Iaxis_motion.cpp"
-        "${PROJECT_SOURCE_DIR}/src/linear_motion.cpp"
-        "${PROJECT_SOURCE_DIR}/src/rotation_motion.cpp"
+        "${PROJECT_SOURCE_DIR}/src/Iph_axis_motion.cpp"
+        "${PROJECT_SOURCE_DIR}/src/ph_linear_motion.cpp"
+        "${PROJECT_SOURCE_DIR}/src/ph_rotation_motion.cpp"
         "${PROJECT_SOURCE_DIR}/src/ph_cooling_controller.cpp"
         # mocking files
         #"${PROJECT_SOURCE_DIR}/tests/sensorMock.cpp"
