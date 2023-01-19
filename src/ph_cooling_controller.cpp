@@ -23,6 +23,7 @@ ph_cooling_controller::ph_cooling_controller()
         std::cout << line << std::endl;
     }
     config = YAML::LoadFile(PH_CONFIG);
+    _ph_params.ph_rotate_to_center= config["ph_rotate_to_center"].as<double>();
     _ph_params.distance_to_center = config["distance_to_center"].as<double>();
     _ph_params.number_of_rotation_per_direction = config["number_of_rotation_per_direction"].as<int>();
     _ph_params.reverse_direction = config["reverse_direction"].as<bool>();
@@ -145,6 +146,7 @@ void ph_cooling_controller::reload_config_file()
         std::cout << line << std::endl;
     }
     config = YAML::LoadFile(PH_CONFIG);
+    _ph_params.ph_rotate_to_center= config["ph_rotate_to_center"].as<double>();
     _ph_params.distance_to_center = config["distance_to_center"].as<double>();
     _ph_params.number_of_rotation_per_direction = config["number_of_rotation_per_direction"].as<int>();
     _ph_params.reverse_direction = config["reverse_direction"].as<bool>();
