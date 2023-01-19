@@ -51,6 +51,7 @@ public:
     virtual ~ph_rotation_motion();
     virtual void move_home() override;
     virtual void move_to(int new_position) override;
+    void rotate_to(double new_pos) override;
     virtual wgm_feedbacks::enum_sub_sys_feedback connect()override;
     virtual void disconnect() override;
     double get_position() override;

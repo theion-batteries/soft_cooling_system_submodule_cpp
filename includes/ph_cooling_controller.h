@@ -60,9 +60,10 @@ public:
     /******** algorithms controller **********/
     void ph_controller_connect();
     void ph_motion_move_home();
+    void ph_rotate_to_center(double new_pos);
     void ph_motion_move_to_center(double new_pos);
     double get_center_target_distance();
-
+    double get_rotate_to_center_param();
     /********* helper functions */
     bool get_linear_mover_status();
     bool get_rotary_mover_status();

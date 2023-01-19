@@ -23,7 +23,7 @@ ph_cooling_controller::ph_cooling_controller()
         std::cout << line << std::endl;
     }
     config = YAML::LoadFile(PH_CONFIG);
-    _ph_params.ph_rotate_to_center= config["ph_rotate_to_center"].as<double>();
+    _ph_params.ph_rotate_to_center = config["ph_rotate_to_center"].as<double>();
     _ph_params.distance_to_center = config["distance_to_center"].as<double>();
     _ph_params.number_of_rotation_per_direction = config["number_of_rotation_per_direction"].as<int>();
     _ph_params.reverse_direction = config["reverse_direction"].as<bool>();
@@ -76,12 +76,20 @@ void ph_cooling_controller::ph_motion_move_to_center(double new_pos)
 {
     linearMover->move_down_to(new_pos);
 }
+void ph_cooling_controller::ph_rotate_to_center(double new_pos)
+{
+    rotaryMover->rotate_to(new_pos);
+}
+
 
 double ph_cooling_controller::get_center_target_distance()
 {
-  return _ph_params.distance_to_center;
+    return _ph_params.distance_to_center;
 }
-
+double ph_cooling_controller::get_rotate_to_center_param()
+{
+    return _ph_params.ph_rotate_to_center;
+}
 
 /********* helper functions */
 bool ph_cooling_controller::get_linear_mover_status()
@@ -146,7 +154,7 @@ void ph_cooling_controller::reload_config_file()
         std::cout << line << std::endl;
     }
     config = YAML::LoadFile(PH_CONFIG);
-    _ph_params.ph_rotate_to_center= config["ph_rotate_to_center"].as<double>();
+    _ph_params.ph_rotate_to_center = config["ph_rotate_to_center"].as<double>();
     _ph_params.distance_to_center = config["distance_to_center"].as<double>();
     _ph_params.number_of_rotation_per_direction = config["number_of_rotation_per_direction"].as<int>();
     _ph_params.reverse_direction = config["reverse_direction"].as<bool>();
