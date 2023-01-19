@@ -1,4 +1,5 @@
 ## config file: default and user defined parameters 
+ph_rotate_to_center: 10 # after homing: rotate the ph x angle to be centered
 distance_to_center: 50 # after homing: go to center position where cnt dispenser will vibrate
 number_of_rotation_per_direction: 10 # frequency for dispensing
 reverse_direction: false # duration of vibration 100 ms
