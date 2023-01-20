@@ -5,9 +5,9 @@ number_of_rotation_per_direction: 10 # frequency for dispensing
 reverse_direction: false # duration of vibration 100 ms
 path_to_upload_img: "" #optional path for img direct load
 jobid: 0					# Default to 0
-jobtype: JT_PRELOAD			# Default to Preload path
-res: RES_HIGH				# Default to high resolution
+jobtype: 0x00000001			# Default to Preload path: JT_PRELOAD in eJOBTYPE
+res: 0x00000001				# Default to high resolution: RES_HIGH in eRES
 docwidth: 3508				# Default to A4 length @ 300dpi
 ncopies: 1					# Default to 1 copy of the document
 docid: 1					# Default to a document ID of 1
-int scanning: 0					# Default to not scanning
+scanning: 0					# Default to not scanning

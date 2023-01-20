@@ -14,7 +14,7 @@
 
 ph_cooling_controller::ph_cooling_controller()
 {
-    std::cout << "creating subsystem wafer holder motion controller " << std::endl;
+    std::cout << "creating subsystem cooling ph controller " << std::endl;
 #ifdef PH_CONFIG
     std::cout << "loading config file: " << PH_CONFIG << std::endl;
     std::ifstream filein(PH_CONFIG);
