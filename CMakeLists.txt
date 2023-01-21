@@ -33,7 +33,7 @@ find_file(ph_config
 )
 message("found ph config file: ${ph_config}")        
 set (PH_CONFIG  "${ph_config}" CACHE FILEPATH "${ph_config}")
-set (PH_CONFIG_DIR  ${CMAKE_INSTALL_PREFIX}/config/ph_config.yaml)
+set (PH_CONFIG_DIR  ${CMAKE_INSTALL_PREFIX}/config/ph_config.yaml CACHE FILEPATH "${CMAKE_INSTALL_PREFIX}/config/ph_config.yaml}")
 add_definitions(-DPH_CONFIG="${PH_CONFIG_DIR}") 
 # copy config one by one 
 function(copy_ph_config target_exe config_file)
