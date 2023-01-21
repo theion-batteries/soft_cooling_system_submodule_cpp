@@ -31,19 +31,15 @@ find_file(ph_config
         PATHS ${CMAKE_CURRENT_SOURCE_DIR}/config
         REQUIRED
 )
-find_package(Python3 REQUIRED COMPONENTS Interpreter Development )
-message("found python interpreter: ${Python3_EXECUTABLE}")
 message("found ph config file: ${ph_config}")        
-set (PH_CONFIG_BUILD  "${ph_config}" CACHE FILEPATH "${ph_config}")
-set (PH_CONFIG  "${CMAKE_INSTALL_PREFIX}/config/ph_config.yaml" CACHE FILEPATH "${CMAKE_INSTALL_PREFIX}/config/ph_config.yaml")
-set (PY_INTERPRETER "${Python3_EXECUTABLE}")
-add_definitions(-DPY_INTERPRETER="${PY_INTERPRETER}") 
-add_definitions(-DPH_CONFIG="${PH_CONFIG}") 
+set (PH_CONFIG  "${ph_config}" CACHE FILEPATH "${ph_config}")
+set (PH_CONFIG_DIR  ${CMAKE_INSTALL_PREFIX}/config/ph_config.yaml)
+add_definitions(-DPH_CONFIG="${PH_CONFIG_DIR}") 
 # copy config one by one 
-function(copy_config target_exe config_file)
+function(copy_ph_config target_exe config_file)
 add_custom_command(TARGET ${target_exe} POST_BUILD
-COMMAND ${CMAKE_COMMAND} -E copy_if_different ${config_file} "${CMAKE_INSTALL_PREFIX}/config/" 
-COMMENT "copy config from ${config_file} to ${CMAKE_INSTALL_PREFIX}/config/"
+COMMAND ${CMAKE_COMMAND} -E copy ${config_file} ${PH_CONFIG_DIR} 
+COMMENT "copy config from ${config_file} to ${PH_CONFIG_DIR}"
     )
 endfunction()
 ###################### Build Library ############################
@@ -79,16 +75,8 @@ PUBLIC ${SOCKPP_INCLUDE_DIRS}
 PRIVATE ${Python_INCLUDE_DIRS}
 )
 target_link_directories(ph_cooling_static PRIVATE ${Python_LIBRARY_DIRS})
-############################# install target lib ########################################
-INSTALL(FILES ${PH_CONFIG_BUILD} DESTINATION config/)
-message("config file PH copied from ${PH_CONFIG_BUILD} to: ${CMAKE_INSTALL_PREFIX}/config/")
-set(PH_CONFIG "${CMAKE_INSTALL_PREFIX}/config/ph_config.yaml")
-add_definitions(-DPH_CONFIG="${PH_CONFIG}") 
-message("config file is copied to ${PH_CONFIG}")
-install(TARGETS ph_cooling_static DESTINATION lib)
-FILE(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/includes/*.h" 
-)
-INSTALL(FILES ${files} DESTINATION include/ph_cooling_static/)
+copy_ph_config(ph_cooling_static ${PH_CONFIG})
+
 ############################# build executable ###################################
 ## source *.cpp
 file(GLOB exe_SRCS
@@ -119,16 +107,13 @@ PRIVATE ${Python_INCLUDE_DIRS}
 )
 target_link_directories(ph_cooling_exe PRIVATE
         ${Python_LIBRARY_DIRS})
-copy_dlls_target_dir(ph_cooling_exe)
+copy_dlls_meteor_target_destination(ph_cooling_exe)
+copy_ph_config(ph_cooling_exe ${PH_CONFIG})
 
-############################# install target exe ########################################
-install(TARGETS ph_cooling_exe 
-CONFIGURATIONS Debug
-RUNTIME DESTINATION bin/Debug
-)
-copy_dlls_target_dir(ph_cooling_exe)
-#FILE(GLOB meteor_dlls  "${CMAKE_CURRENT_SOURCE_DIR}/Dep/meteor/lib/*.dll"  )
-#install(FILES ${meteor_dlls} 
-#CONFIGURATIONS Debug
-#RUNTIME DESTINATION bin/Debug
-#)
+############################# install targets ########################################
+        FILE(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/includes/*.h" )
+        INSTALL(FILES ${files} DESTINATION include/ph_cooling_static/)
+        install(TARGETS ph_cooling_exe ph_cooling_static
+        CONFIGURATIONS Debug
+        RUNTIME DESTINATION bin/Debug
+        LIBRARY DESTINATION lib)
