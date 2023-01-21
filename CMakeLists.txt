@@ -42,6 +42,12 @@ COMMAND ${CMAKE_COMMAND} -E copy ${config_file} ${PH_CONFIG_DIR}
 COMMENT "copy config from ${config_file} to ${PH_CONFIG_DIR}"
     )
 endfunction()
+# copy dlls one by one 
+function(copy_dlls_yaml_target_destination target_exe)
+add_custom_command(TARGET ${target_exe} POST_BUILD
+COMMAND ${CMAKE_COMMAND} -E copy_if_different  $<TARGET_FILE:yaml-cpp> $<TARGET_FILE_DIR:${target_exe}>
+COMMAND_EXPAND_LISTS)
+endfunction()
 ###################### Build Library ############################
 # source *.cpp
 file(GLOB lib_SRCS
@@ -109,6 +115,7 @@ target_link_directories(ph_cooling_exe PRIVATE
         ${Python_LIBRARY_DIRS})
 copy_dlls_meteor_target_destination(ph_cooling_exe)
 copy_ph_config(ph_cooling_exe ${PH_CONFIG})
+copy_dlls_yaml_target_destination(ph_cooling_exe)
 
 ############################# install targets ########################################
         FILE(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/includes/*.h" )
