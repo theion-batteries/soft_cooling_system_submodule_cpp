@@ -19,7 +19,7 @@ if (MSVC)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 ########################## add subdirectory##################
-set(CMAKE_PREFIX_PATH "${VCPKG_ROOT}/installed/x64-windows/share")
+#set(CMAKE_PREFIX_PATH "${VCPKG_ROOT}/installed/x64-windows/share")
 find_package(sockpp CONFIG REQUIRED)
 find_package(yaml-cpp CONFIG REQUIRED)
 add_subdirectory(dependencies/software_printhead_module)
@@ -53,6 +53,8 @@ add_library(ph_cooling_static STATIC ${lib_SRCS})
 target_link_libraries(ph_cooling_static 
 # ph interface lib
 PUBLIC ph_interface_lib
+PUBLIC wsock32 
+PUBLIC ws2_32
 # sockpp lib
 PUBLIC ${SOCKPP_LIBRARIES}
 #yaml lib
@@ -82,6 +84,8 @@ add_executable(ph_cooling_exe ${exe_SRCS})
 target_link_libraries(ph_cooling_exe 
 # ph interface lib
 PUBLIC ph_interface_lib
+PUBLIC wsock32 
+PUBLIC ws2_32
 # sockpp lib
 PUBLIC ${SOCKPP_LIBRARIES}
 #yaml lib
@@ -110,9 +114,9 @@ COMMENT "copy config from ${config_file} to ${PH_CONFIG_DIR}"
 endfunction()
 # copy dlls one by one 
 function(copy_dlls_yaml_target_destination target_exe)
-add_custom_command(TARGET ${target_exe} POST_BUILD
-COMMAND ${CMAKE_COMMAND} -E copy_if_different  $<TARGET_FILE:yaml-cpp> $<TARGET_FILE_DIR:${target_exe}>
-COMMAND_EXPAND_LISTS)
+#add_custom_command(TARGET ${target_exe} POST_BUILD
+#COMMAND ${CMAKE_COMMAND} -E copy_if_different  $<TARGET_FILE:yaml-cpp> $<TARGET_FILE_DIR:${target_exe}>
+#COMMAND_EXPAND_LISTS)
 endfunction()
 
 
