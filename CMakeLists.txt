@@ -19,7 +19,7 @@ if (MSVC)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 ########################## add subdirectory##################
-#set(CMAKE_PREFIX_PATH "${VCPKG_ROOT}/installed/x64-windows/share")
+set(CMAKE_PREFIX_PATH "${VCPKG_ROOT}/installed/x64-windows/share")
 find_package(sockpp CONFIG REQUIRED)
 find_package(yaml-cpp CONFIG REQUIRED)
 add_subdirectory(dependencies/software_printhead_module)
@@ -35,6 +35,20 @@ message("found ph config file: ${ph_config}")
 set (PH_CONFIG  "${ph_config}" CACHE FILEPATH "${ph_config}")
 set (PH_CONFIG_DIR  ${CMAKE_INSTALL_PREFIX}/config/ph_config.yaml CACHE FILEPATH "${CMAKE_INSTALL_PREFIX}/config/ph_config.yaml}")
 add_definitions(-DPH_CONFIG="${PH_CONFIG_DIR}") 
+##################### Post Build ####################
+# copy config one by one 
+function(copy_ph_config target_exe config_file)
+add_custom_command(TARGET ${target_exe} POST_BUILD
+COMMAND ${CMAKE_COMMAND} -E copy ${config_file} ${PH_CONFIG_DIR} 
+COMMENT "copy config from ${config_file} to ${PH_CONFIG_DIR}"
+    )
+endfunction()
+# copy dlls one by one 
+function(copy_dlls_yaml_target_destination target_exe)
+add_custom_command(TARGET ${target_exe} POST_BUILD
+COMMAND ${CMAKE_COMMAND} -E copy_if_different  $<TARGET_FILE:yaml-cpp> $<TARGET_FILE_DIR:${target_exe}>
+COMMAND_EXPAND_LISTS)
+endfunction()
 
 ###################### Build Library ############################
 # source *.cpp
@@ -104,20 +118,6 @@ PRIVATE ${Python_INCLUDE_DIRS}
 target_link_directories(ph_cooling_exe PRIVATE
         ${Python_LIBRARY_DIRS})
 
-##################### Post Build ####################
-# copy config one by one 
-function(copy_ph_config target_exe config_file)
-add_custom_command(TARGET ${target_exe} POST_BUILD
-COMMAND ${CMAKE_COMMAND} -E copy ${config_file} ${PH_CONFIG_DIR} 
-COMMENT "copy config from ${config_file} to ${PH_CONFIG_DIR}"
-    )
-endfunction()
-# copy dlls one by one 
-function(copy_dlls_yaml_target_destination target_exe)
-#add_custom_command(TARGET ${target_exe} POST_BUILD
-#COMMAND ${CMAKE_COMMAND} -E copy_if_different  $<TARGET_FILE:yaml-cpp> $<TARGET_FILE_DIR:${target_exe}>
-#COMMAND_EXPAND_LISTS)
-endfunction()
 
 
 copy_ph_config(ph_cooling_static ${PH_CONFIG})
