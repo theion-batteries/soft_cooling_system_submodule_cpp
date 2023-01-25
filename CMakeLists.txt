@@ -132,7 +132,9 @@ copy_dlls_yaml_target_destination(ph_cooling_exe)
 ############################# install targets ########################################
         FILE(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/includes/*.h" )
         INSTALL(FILES ${files} DESTINATION include/ph_cooling_static/)
-        install(TARGETS ph_cooling_exe ph_cooling_static
+        install(TARGETS ph_cooling_exe ph_cooling_static 
         CONFIGURATIONS Debug
         RUNTIME DESTINATION bin/Debug
         LIBRARY DESTINATION lib)
+        FILE(GLOB meteroDlls "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/Dep/meteor/lib/*.dll" )
+        install(FILES ${meteroDlls} DESTINATION bin/Debug)
