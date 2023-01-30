@@ -1,6 +1,6 @@
 ## config file: default and user defined parameters 
 ph_rotate_to_center: 10 # after homing: rotate the ph x angle to be centered
-distance_to_center: 50 # after homing: go to center position where cnt dispenser will vibrate
+distance_to_center: 150 # after homing: go to center position where cnt dispenser will vibrate
 number_of_rotation_per_direction: 10 # frequency for dispensing
 reverse_direction: false # duration of vibration 100 ms
 path_to_upload_img: "" #optional path for img direct load
@@ -11,3 +11,12 @@ docwidth: 3508				# Default to A4 length @ 300dpi
 ncopies: 1					# Default to 1 copy of the document
 docid: 1					# Default to a document ID of 1
 scanning: 0					# Default to not scanning
+
+## imported ##
+
+phead_travel : 150
+phead_max_travel : 220                                      #used # DO NOT CHANGE IF YOU DONT KNOW WHAT YOU#RE DOING
+phead_rotations : 5                                         # ??
+phead_max_rotations : 50
+phead_max_linear_speed : 400                                # used
+phead_max_rot_speed : 100                                   # used

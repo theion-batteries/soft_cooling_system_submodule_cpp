@@ -35,6 +35,12 @@ ph_cooling_controller::ph_cooling_controller()
     _ph_params.ncopies = config["ncopies"].as<DWORD>();
     _ph_params.docid = config["docid"].as<DWORD>();
     _ph_params.scanning = config["scanning"].as<int>();
+    _ph_params.phead_max_travel = config["phead_max_travel"].as<int>();
+    _ph_params.phead_max_rotations = config["phead_max_rotations"].as<int>();
+    _ph_params.phead_max_linear_speed = config["phead_max_linear_speed"].as<int>();
+    _ph_params.phead_max_rot_speed = config["phead_max_rot_speed"].as<int>();
+
+
 #endif 
 #ifdef SINK_PH_MOCK
     ph = std::make_shared< sensorMock>();
@@ -166,5 +172,10 @@ void ph_cooling_controller::reload_config_file()
     _ph_params.ncopies = config["ncopies"].as<DWORD>();
     _ph_params.docid = config["docid"].as<DWORD>();
     _ph_params.scanning = config["scanning"].as<int>();
+    _ph_params.phead_max_travel = config["phead_max_travel"].as<int>();
+    _ph_params.phead_max_rotations = config["phead_max_rotations"].as<int>();
+    _ph_params.phead_max_linear_speed = config["phead_max_linear_speed"].as<int>();
+    _ph_params.phead_max_rot_speed = config["phead_max_rot_speed"].as<int>();
+
 
 }

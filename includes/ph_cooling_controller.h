@@ -53,6 +53,7 @@ private:
     double current_axis_position;
     YAML::Node config;
     cooling_config_yaml_params _ph_params;
+    cooling_config_yaml_params _ph_params_default;
 public:
     /******* const/desctr ****/
     ph_cooling_controller();
