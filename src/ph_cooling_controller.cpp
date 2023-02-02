@@ -10,6 +10,8 @@
  */
 
 #include "ph_cooling_controller.h"
+using enum wgm_feedbacks::enum_hw_feedback;
+using enum wgm_feedbacks::enum_sub_sys_feedback;
 
 
 ph_cooling_controller::ph_cooling_controller()
@@ -67,16 +69,31 @@ ph_cooling_controller::~ph_cooling_controller()
 }
 
 /**************** Algorithms conntroller ***************/
-void ph_cooling_controller::ph_controller_connect()
+//void ph_cooling_controller::ph_controller_connect()
+//{
+//    linearMover->connect();
+//    rotaryMover->connect();
+//    ph->connect();
+//}
+wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_connect_engine()
 {
-    linearMover->connect();
-    rotaryMover->connect();
-    ph->connect();
+
+    if (ph->connect() == hw_error) return sub_error;
+    return sub_success;
+
 }
+
+wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_controller_connect()
+{
+    if (linearMover->connect() == sub_error || rotaryMover->connect() == sub_error || ph_connect_engine() == sub_error) return sub_error;
+    return sub_success;
+}
+
 void ph_cooling_controller::ph_motion_move_home()
 {
     linearMover->move_home();
     rotaryMover->move_home();
+    
 }
 void ph_cooling_controller::ph_motion_move_to_center(double new_pos)
 {
