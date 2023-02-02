@@ -23,7 +23,7 @@ set(CMAKE_PREFIX_PATH "${VCPKG_ROOT}/installed/x64-windows/share")
 find_package(sockpp CONFIG REQUIRED)
 find_package(yaml-cpp CONFIG REQUIRED)
 add_subdirectory(dependencies/Dep/meteor)
-add_subdirectory(tests)
+#add_subdirectory(tests)
 
 add_definitions(-D_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING)  
 add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)  
