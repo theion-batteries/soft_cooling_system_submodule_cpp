@@ -59,12 +59,15 @@ public:
     ph_cooling_controller();
     ~ph_cooling_controller();
     /******** algorithms controller **********/
-    //void ph_controller_connect();
     wgm_feedbacks::enum_sub_sys_feedback ph_connect_engine();
     wgm_feedbacks::enum_sub_sys_feedback ph_controller_connect();
-    void ph_motion_move_home();
-    void ph_rotate_to_center(double new_pos);
-    void ph_motion_move_to_center(double new_pos);
+    wgm_feedbacks::enum_sub_sys_feedback ph_motion_move_home();
+    wgm_feedbacks::enum_sub_sys_feedback ph_rotate_to_center(double new_pos);
+    wgm_feedbacks::enum_sub_sys_feedback ph_motion_move_to_center(double new_pos);
+    wgm_feedbacks::enum_sub_sys_feedback ph_rotate_center();
+    wgm_feedbacks::enum_sub_sys_feedback ph_move_center();
+    wgm_feedbacks::enum_sub_sys_feedback ph_rotate_and_print();
+    
     double get_center_target_distance();
     double get_rotate_to_center_param();
     /********* helper functions */

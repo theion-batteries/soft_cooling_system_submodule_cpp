@@ -69,18 +69,11 @@ ph_cooling_controller::~ph_cooling_controller()
 }
 
 /**************** Algorithms conntroller ***************/
-//void ph_cooling_controller::ph_controller_connect()
-//{
-//    linearMover->connect();
-//    rotaryMover->connect();
-//    ph->connect();
-//}
+
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_connect_engine()
 {
-
     if (ph->connect() == hw_error) return sub_error;
     return sub_success;
-
 }
 
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_controller_connect()
@@ -89,19 +82,41 @@ wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_controller_connec
     return sub_success;
 }
 
-void ph_cooling_controller::ph_motion_move_home()
+wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_motion_move_home()
 {
     linearMover->move_home();
     rotaryMover->move_home();
-    
+    return sub_success;
 }
-void ph_cooling_controller::ph_motion_move_to_center(double new_pos)
+wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_motion_move_to_center(double new_pos)
 {
     linearMover->move_down_to(new_pos);
+    return sub_success;
 }
-void ph_cooling_controller::ph_rotate_to_center(double new_pos)
+wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_rotate_to_center(double new_pos)
 {
     rotaryMover->rotate_to(new_pos);
+    return sub_success;
+}
+
+wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_move_center()
+{
+    linearMover->move_down_to(_ph_params.distance_to_center);
+    return sub_success;
+}
+wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_rotate_center()
+{
+    rotaryMover->rotate_to(_ph_params.ph_rotate_to_center);
+    return sub_success;
+}
+
+wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_rotate_and_print()
+{
+    // rotate thread 
+
+    // print thread
+
+    return sub_success;
 }
 
 
