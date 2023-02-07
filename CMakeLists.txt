@@ -64,11 +64,11 @@ file(GLOB lib_SRCS
         #"${PROJECT_SOURCE_DIR}/tests/axisMock.cpp"
 )
 # add libraries
-add_library(ph_cooling_static STATIC ${lib_SRCS})
+add_library(coolingLib STATIC ${lib_SRCS})
 # link againt static lib
-target_link_libraries(ph_cooling_static 
+target_link_libraries(coolingLib 
 # ph interface lib
-PUBLIC ph_interface_lib
+PUBLIC meteorLib
 PUBLIC wsock32 
 PUBLIC ws2_32
 # sockpp lib
@@ -79,14 +79,14 @@ PUBLIC yaml-cpp
 PRIVATE ${Python_LIBRARIES}
 )
 # include libs
-target_include_directories(ph_cooling_static 
+target_include_directories(coolingLib 
 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes/
 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tests/
 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/software_printhead_module/includes/
 PUBLIC ${SOCKPP_INCLUDE_DIRS}
 PRIVATE ${Python_INCLUDE_DIRS}
 )
-target_link_directories(ph_cooling_static PRIVATE ${Python_LIBRARY_DIRS})
+target_link_directories(coolingLib PRIVATE ${Python_LIBRARY_DIRS})
 ############################# build executable ###################################
 ## source *.cpp
 file(GLOB exe_SRCS
@@ -96,10 +96,10 @@ file(GLOB exe_SRCS
         #"${PROJECT_SOURCE_DIR}/tests/axisMock.cpp"
 )
 # add .exe
-add_executable(ph_cooling_exe ${exe_SRCS})
-target_link_libraries(ph_cooling_exe 
+add_executable(coolingBin ${exe_SRCS})
+target_link_libraries(coolingBin 
 # ph interface lib
-PUBLIC ph_interface_lib
+PUBLIC meteorLib
 PUBLIC wsock32 
 PUBLIC ws2_32
 # sockpp lib
@@ -110,29 +110,29 @@ PUBLIC yaml-cpp
 PRIVATE ${Python_LIBRARIES}
 )
 # include libs
-target_include_directories(ph_cooling_exe 
+target_include_directories(coolingBin 
 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes/
 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tests/
 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/software_printhead_module/includes
 PUBLIC ${SOCKPP_INCLUDE_DIRS}
 PRIVATE ${Python_INCLUDE_DIRS}
 )
-target_link_directories(ph_cooling_exe PRIVATE
+target_link_directories(coolingBin PRIVATE
         ${Python_LIBRARY_DIRS})
 
 
 
-copy_ph_config(ph_cooling_static ${PH_CONFIG})
+copy_ph_config(coolingLib ${PH_CONFIG})
 
 
-copy_dlls_meteor_target_destination(ph_cooling_exe)
-copy_ph_config(ph_cooling_exe ${PH_CONFIG})
-copy_dlls_yaml_target_destination(ph_cooling_exe)
+copy_dlls_meteor_target_destination(coolingBin)
+copy_ph_config(coolingBin ${PH_CONFIG})
+copy_dlls_yaml_target_destination(coolingBin)
 
 ############################# install targets ########################################
         FILE(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/includes/*.h" )
-        INSTALL(FILES ${files} DESTINATION include/ph_cooling_static/)
-        install(TARGETS  ph_cooling_static #ph_cooling_exe
+        INSTALL(FILES ${files} DESTINATION include/coolingLib/)
+        install(TARGETS  coolingLib #coolingBin
         CONFIGURATIONS Debug
         RUNTIME DESTINATION bin/Debug
         LIBRARY DESTINATION lib)

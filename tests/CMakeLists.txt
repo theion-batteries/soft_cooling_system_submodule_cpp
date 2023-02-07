@@ -14,7 +14,7 @@ add_executable(phTests
 )
 target_link_libraries(phTests
   GTest::gtest_main
-  ph_cooling_static
+  coolingLib
 )
 target_include_directories(phTests
 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../includes/
