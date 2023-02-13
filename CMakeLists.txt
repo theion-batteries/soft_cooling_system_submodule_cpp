@@ -132,6 +132,7 @@ copy_dlls_yaml_target_destination(coolingBin)
 ############################# install targets ########################################
         FILE(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/includes/*.h" )
         INSTALL(FILES ${files} DESTINATION include/coolingLib/)
+        INSTALL(FILES ${PH_CONFIG} DESTINATION config/)
         install(TARGETS  coolingLib #coolingBin
         CONFIGURATIONS Debug
         RUNTIME DESTINATION bin/Debug
