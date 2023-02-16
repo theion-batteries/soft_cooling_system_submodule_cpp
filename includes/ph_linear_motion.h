@@ -24,8 +24,10 @@
 
 struct ph_linear_motion_server
 {
-    const char* ip = "192.168.0.206";
-    uint16_t port = 8881;
+    std::string ip = "192.168.0.205";
+    uint16_t port = 8882;
+    double max_travel = 150          ;            //                    # used # how far the printhead will move, to be adjusted each try
+    double phead_max_travel = 220       ;             //                  # used # DO NOT CHANGE IF YOU DONT KNOW WHAT YOU#RE DOING
 };
 
 
@@ -37,34 +39,36 @@ private:
     sockpp::tcp_connector* axis_client_sock=nullptr;
     bool axisReady = false;
 protected:
-    std::map<u_int, std::string> axis_cmds = {
-        {0,"$X"}, {1,"?"}, {2,"X160"},
-        {3,"$"}, {4,"X"},
-        {5,"X"}, {6,"X"},
-        {7,"$H"}
+    std::map<std::string, std::string> axis_cmds = {
+        {"unlock","$X"}, {"get_position","?"}, {"move","X"},
+        {"get_setting","$$"}, {"set_speed","$110="}, {"home","$H"},
+        {"pause","!"}, {"resume","~"}
     };
     std::deque<double> axis_last_position; // FIFO last 10 values
     std::string axis_incoming_data;
-    size_t axis_data_length = 1024;
+    size_t axis_data_length = 5012;
 public:
     ph_linear_motion();
+    ph_linear_motion(std::string ip, uint16_t port);
     virtual ~ph_linear_motion();
-    virtual void move_home() override;
-    virtual void move_to(int new_position) override;
+    virtual wgm_feedbacks::enum_sub_sys_feedback move_home() override;
+    virtual wgm_feedbacks::enum_sub_sys_feedback move_to(int new_position) override;
     virtual wgm_feedbacks::enum_sub_sys_feedback connect()override;
-    virtual void disconnect() override;
+    virtual wgm_feedbacks::enum_sub_sys_feedback disconnect() override;
     double get_position() override;
-    void get_speed() override;
-    void set_speed(double_t new_val) override;
-    void move_up_to(double_t new_pos) override;
-    void move_down_to(double_t new_pos) override;
-    void move_up_by(double_t steps) override;
-    void move_down_by(double_t steps) override;
+    double get_speed() override;
+    wgm_feedbacks::enum_sub_sys_feedback set_speed(double_t new_val) override;
+    wgm_feedbacks::enum_sub_sys_feedback move_up_to(double_t new_pos) override;
+    wgm_feedbacks::enum_sub_sys_feedback move_down_to(double_t new_pos) override;
+    wgm_feedbacks::enum_sub_sys_feedback move_up_by(double_t steps) override;
+    wgm_feedbacks::enum_sub_sys_feedback move_down_by(double_t steps) override;
     virtual bool getStatus() override;
     virtual std::string sendDirectCmd(std::string cmd) override;
     std::string waitForResponse();
-    void move_center();
-    void unlock();
+    wgm_feedbacks::enum_sub_sys_feedback move_center();
+    wgm_feedbacks::enum_sub_sys_feedback set_center_position(double new_target) ;
+
+    wgm_feedbacks::enum_sub_sys_feedback unlock();
 };
 
 

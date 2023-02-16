@@ -42,6 +42,7 @@
 #include "ph_rotation_motion.h"
 #endif
 
+#include "ph_trigger.h"
 class ph_cooling_controller
 {
 
@@ -49,7 +50,8 @@ private:
     bool phCoolingControllerReady = false;
     std::shared_ptr< meteorAdapter> ph;
     std::shared_ptr <Iph_axis_motion> linearMover;
-    std::shared_ptr <Iph_axis_motion> rotaryMover;
+    std::shared_ptr <Iph_rotation> rotaryMover;
+    std::shared_ptr <ph_trigger> phTrigger;
     double current_axis_position;
     YAML::Node config;
     cooling_config_yaml_params _ph_params;

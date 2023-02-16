@@ -13,10 +13,18 @@ docid: 1					# Default to a document ID of 1
 scanning: 0					# Default to not scanning
 
 ## imported ##
+ph_motion_server_ip: "192.168.0.205" # 192.168.0.209 "127.0.0.1"
+ph_motion_server_port: 8882
+ph_rotation_server_ip: "192.168.0.205" # 192.168.0.209 "127.0.0.1" # rotation /trigger
+ph_rotation_server_port: 8882
+ph_trigger_server_ip: "192.168.0.205" # 192.168.0.209 "127.0.0.1" # trigger /trigger
+ph_trigger_server_port: 8881
+phead_travel: 150                                          # used # how far the printhead will move, to be adjusted each try
+phead_max_travel: 220                                      # used # DO NOT CHANGE IF YOU DONT KNOW WHAT YOU#RE DOING
+phead_rotations: 5                                         # used # number of rotations the printhead will do--> DIRECTLY RELATED WITH PICTURE SIZE
+phead_max_rotations: 50                                    # used # soft limit switch for the rotation axis if moving more than 50 rot, it locks
+phead_max_linear_speed: 400                                # used # maximum speed in mm per min the printhead will move up/down
+phead_max_rot_speed: 100                                   # used # maximum speed of printhead rotation ($111 in GRBL), units are not defined properly.
 
-phead_travel : 150
-phead_max_travel : 220                                      #used # DO NOT CHANGE IF YOU DONT KNOW WHAT YOU#RE DOING
-phead_rotations : 5                                         # ??
-phead_max_rotations : 50
-phead_max_linear_speed : 400                                # used
-phead_max_rot_speed : 100                                   # used
+phead_intermediate_stop: 50                                # so printhead will stop here, rotate the angle defined by the following parameter, and keep going.
+phead_start_angle: 90                                      # before moving the printhead to the cooling surface, it needs to be rotated.

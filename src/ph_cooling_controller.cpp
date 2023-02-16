@@ -37,11 +37,24 @@ ph_cooling_controller::ph_cooling_controller()
     _ph_params.ncopies = config["ncopies"].as<DWORD>();
     _ph_params.docid = config["docid"].as<DWORD>();
     _ph_params.scanning = config["scanning"].as<int>();
-    _ph_params.phead_max_travel = config["phead_max_travel"].as<int>();
-    _ph_params.phead_max_rotations = config["phead_max_rotations"].as<int>();
-    _ph_params.phead_max_linear_speed = config["phead_max_linear_speed"].as<int>();
-    _ph_params.phead_max_rot_speed = config["phead_max_rot_speed"].as<int>();
+    // ips /port
+    _ph_params.ph_motion_server_ip = config["ph_motion_server_ip"].as<std::string>();
+    _ph_params.ph_motion_server_port = config["ph_motion_server_port"].as<uint16_t>();
+    _ph_params.ph_rotation_server_ip = config["ph_rotation_server_ip"].as<std::string>();
+    _ph_params.ph_rotation_server_port = config["ph_rotation_server_port"].as<uint16_t>();
+    _ph_params.ph_trigger_server_ip = config["ph_trigger_server_ip"].as<std::string>();
+    _ph_params.ph_trigger_server_port = config["ph_trigger_server_port"].as<uint16_t>();
 
+
+    // motion /rotation
+    _ph_params.phead_travel = config["phead_travel"].as<double>();
+    _ph_params.phead_max_travel = config["phead_max_travel"].as<double>();
+    _ph_params.phead_rotations = config["phead_rotations"].as<double>();
+    _ph_params.phead_max_rotations = config["phead_max_rotations"].as<double>();
+    _ph_params.phead_max_linear_speed = config["phead_max_linear_speed"].as<double>();
+    _ph_params.phead_max_rot_speed = config["phead_max_rot_speed"].as<double>();
+    _ph_params.phead_intermediate_stop = config["phead_intermediate_stop"].as<double>();
+    _ph_params.phead_start_angle = config["phead_start_angle"].as<double>();
 
 #endif 
 #ifdef SINK_PH_MOCK
@@ -52,12 +65,17 @@ ph_cooling_controller::ph_cooling_controller()
 #ifdef SINK_AXIS_MOCK
     linearMover = std::make_shared< axisMock>();
 #else
-    linearMover = std::make_shared< ph_linear_motion>();
+    linearMover = std::make_shared< ph_linear_motion>(_ph_params.ph_motion_server_ip ,_ph_params.ph_motion_server_port);
 #endif
 #ifdef SINK_ROT_MOCK
     linearMover = std::make_shared< axisMock>();
 #else
-    rotaryMover = std::make_shared< ph_rotation_motion>();
+    rotaryMover = std::make_shared< ph_rotation_motion>(_ph_params.ph_rotation_server_ip,_ph_params.ph_rotation_server_port);
+#endif
+#ifdef SINK_ROT_MOCK
+    linearMover = std::make_shared< axisMock>();
+#else
+    phTrigger = std::make_shared< ph_trigger>(_ph_params.ph_trigger_server_ip,_ph_params.ph_trigger_server_port);
 #endif
 }
 /**
@@ -78,45 +96,50 @@ wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_connect_engine()
 
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_controller_connect()
 {
-    if (linearMover->connect() == sub_error || rotaryMover->connect() == sub_error || ph_connect_engine() == sub_error) return sub_error;
+    if (linearMover->connect() == sub_error || rotaryMover-> connect() == sub_error || phTrigger-> connect() == sub_error || ph_connect_engine() == sub_error) return sub_error;
     return sub_success;
 }
 
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_motion_move_home()
 {
-    linearMover->move_home();
-    rotaryMover->move_home();
+    if (linearMover->move_home() == sub_error ||rotaryMover->rotate_home() ==sub_error) return sub_error;
     return sub_success;
 }
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_motion_move_to_center(double new_pos)
 {
-    linearMover->move_down_to(new_pos);
-    return sub_success;
+return    linearMover->move_down_to(new_pos);
+
 }
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_rotate_to_center(double new_pos)
 {
-    rotaryMover->rotate_to(new_pos);
-    return sub_success;
+return    rotaryMover->rotate_to(new_pos);
+
 }
 
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_move_center()
 {
-    linearMover->move_down_to(_ph_params.distance_to_center);
-    return sub_success;
+return    linearMover->move_down_to(_ph_params.distance_to_center);
+
 }
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_rotate_center()
 {
-    rotaryMover->rotate_to(_ph_params.ph_rotate_to_center);
-    return sub_success;
+return    rotaryMover->rotate_to(_ph_params.ph_rotate_to_center);
+
 }
 
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_rotate_and_print()
 {
+
+    /*
     // rotate thread 
-
     // print thread
-
-    return sub_success;
+    // Algoritm:
+    1. start rotating freely:
+    2. after 1 rev: start printing
+    3. after 5 rev: stop printing and rotation
+    */
+    phTrigger->turn_on();
+    return sub_error;
 }
 
 
@@ -204,10 +227,21 @@ void ph_cooling_controller::reload_config_file()
     _ph_params.ncopies = config["ncopies"].as<DWORD>();
     _ph_params.docid = config["docid"].as<DWORD>();
     _ph_params.scanning = config["scanning"].as<int>();
-    _ph_params.phead_max_travel = config["phead_max_travel"].as<int>();
-    _ph_params.phead_max_rotations = config["phead_max_rotations"].as<int>();
-    _ph_params.phead_max_linear_speed = config["phead_max_linear_speed"].as<int>();
-    _ph_params.phead_max_rot_speed = config["phead_max_rot_speed"].as<int>();
-
-
+    // ips /port
+    _ph_params.ph_motion_server_ip = config["ph_motion_server_ip"].as<std::string>();
+    _ph_params.ph_motion_server_port = config["ph_motion_server_port"].as<uint16_t>();
+    _ph_params.ph_rotation_server_ip = config["ph_rotation_server_ip"].as<std::string>();
+    _ph_params.ph_rotation_server_port = config["ph_rotation_server_port"].as<uint16_t>();
+    _ph_params.ph_trigger_server_ip = config["ph_trigger_server_ip"].as<std::string>();
+    _ph_params.ph_trigger_server_port = config["ph_trigger_server_port"].as<uint16_t>();
+ 
+    // motion /rotation
+    _ph_params.phead_travel = config["phead_travel"].as<double>();
+    _ph_params.phead_max_travel = config["phead_max_travel"].as<double>();
+    _ph_params.phead_rotations = config["phead_rotations"].as<double>();
+    _ph_params.phead_max_rotations = config["phead_max_rotations"].as<double>();
+    _ph_params.phead_max_linear_speed = config["phead_max_linear_speed"].as<double>();
+    _ph_params.phead_max_rot_speed = config["phead_max_rot_speed"].as<double>();
+    _ph_params.phead_intermediate_stop = config["phead_intermediate_stop"].as<double>();
+    _ph_params.phead_start_angle = config["phead_start_angle"].as<double>();
 }
