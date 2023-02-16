@@ -97,6 +97,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_connect_engine()
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_controller_connect()
 {
     if (linearMover->connect() == sub_error || rotaryMover-> connect() == sub_error || phTrigger-> connect() == sub_error || ph_connect_engine() == sub_error) return sub_error;
+    phCoolingControllerReady=true;
     return sub_success;
 }
 

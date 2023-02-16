@@ -47,9 +47,7 @@ private:
     size_t trigger_data_length = 5012;
 
 public:
-    ph_trigger();
     ph_trigger(std::string ip, uint16_t port);
-     ~ph_trigger();
     wgm_feedbacks::enum_sub_sys_feedback connect();
     wgm_feedbacks::enum_sub_sys_feedback disconnect();
     wgm_feedbacks::enum_sub_sys_feedback turn_on();
