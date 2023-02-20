@@ -2,8 +2,8 @@
 
 ph_trigger::ph_trigger(std::string ip, uint16_t port)
 {
-    _trigger_struct.ip= ip;
-    _trigger_struct.port=port;
+    _trigger_struct.ip = ip;
+    _trigger_struct.port = port;
 
 }
 
@@ -103,4 +103,10 @@ wgm_feedbacks::enum_sub_sys_feedback ph_trigger::turn_off()
     }
     return sub_error;
 
+}
+
+
+bool ph_trigger::getStatus()
+{
+    return triggerReady;
 }

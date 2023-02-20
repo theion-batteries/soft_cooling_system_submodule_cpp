@@ -25,7 +25,7 @@
 struct ph_rotation_motion_server
 {
     std::string ip = "192.168.0.205";
-    uint16_t port = 8881;
+    uint16_t port = 8882;
     double phead_intermediate_stop = 50;
     double phead_start_angle = 90;
     double phead_max_rot_speed = 100;

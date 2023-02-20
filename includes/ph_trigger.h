@@ -41,7 +41,7 @@ private:
     sockpp::tcp_connector* trigger_client_sock = nullptr;
     bool triggerReady = false;
     std::map<std::string, std::string> trigger_cmds = {
-        {"turn_on","trigger"}, {"turn_off","off"}
+        {"turn_on","trigger"}, {"turn_off","stop"}
     };
     std::string trigger_incoming_data;
     size_t trigger_data_length = 5012;
@@ -52,6 +52,7 @@ public:
     wgm_feedbacks::enum_sub_sys_feedback disconnect();
     wgm_feedbacks::enum_sub_sys_feedback turn_on();
     wgm_feedbacks::enum_sub_sys_feedback turn_off();
+    bool getStatus();
     std::string sendDirectCmd(std::string cmd) ;
     std::string waitForResponse();
 };
