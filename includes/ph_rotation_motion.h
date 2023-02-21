@@ -40,7 +40,7 @@ class ph_rotation_motion: public Iph_rotation
 private:
     ph_rotation_motion_server _rotation_motion_struct;
     sockpp::socket_initializer sockInit;
-    sockpp::tcp_connector* axis_client_sock = nullptr;
+    sockpp::tcp_connector* _client = nullptr;
     bool axisReady = false;
 protected:
     std::map<std::string, std::string> axis_cmds = {
@@ -49,7 +49,7 @@ protected:
         {"pause","!"}, {"resume","~"}
     };
     std::deque<double> axis_last_position; // FIFO last 10 values
-    std::string axis_incoming_data;
+    std::string incoming_data;
     size_t axis_data_length = 5012;
 public:
     ph_rotation_motion();

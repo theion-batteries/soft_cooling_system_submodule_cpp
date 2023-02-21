@@ -41,7 +41,7 @@ class ph_xy_motion: public Iph_xy_motion
 private:
     ph_motion_server _motion_struct;
     sockpp::socket_initializer sockInit;
-    sockpp::tcp_connector* axis_client_sock = nullptr;
+    sockpp::tcp_connector* _client = nullptr;
     bool axisReady = false;
 protected:
     std::map<std::string, std::string> axis_cmds = {
@@ -49,7 +49,7 @@ protected:
         {"get_setting","$$"}, {"set_Xspeed","$110="}, {"homeX","$HX"},{"homeY","$HY"},
         {"set_Yspeed","$111="},  {"pause","!"}, {"resume","~"},{"homeAll","$H"}
     };
-    std::string axis_incoming_data;
+    std::string incoming_data;
     size_t axis_data_length = 5012;  
 public:
     //generic
