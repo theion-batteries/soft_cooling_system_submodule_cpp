@@ -37,13 +37,13 @@ std::string ph_linear_motion::sendDirectCmd(std::string cmd)
     }
     return waitForResponse();
 }
-
-std::string ph_linear_motion::waitForResponse()
+std::string linear_motion::waitForResponse()
 {
     std::cout << "awaiting server response" << std::endl;
-    if (axis_client_sock->is_connected())
+    while (axis_client_sock->is_connected())
     {
         char Strholder[5012];
+        
         ssize_t n = axis_client_sock->read_n(&Strholder, 5012);
         if (n > 0)
         {
@@ -51,16 +51,20 @@ std::string ph_linear_motion::waitForResponse()
             axis_incoming_data = Strholder;
             axis_incoming_data.resize(n);
             std::cout << "server replied : " << axis_incoming_data << std::endl;
-            return axis_incoming_data;
+            //return axis_incoming_data;
+            break;
         }
         else
         {
-            std::cout << "no server response " << n << std::endl;
-            return "NA";
+            std::cout << "no server response, retry " << n << std::endl;
+            //waitForResponse();
+            axis_incoming_data = "NA";
+            continue;
+            //return "NA";
         }
 
     }
-    return "NA";
+    return axis_incoming_data;
 }
 wgm_feedbacks::enum_sub_sys_feedback ph_linear_motion::set_center_position(double new_target)
 {
