@@ -55,6 +55,7 @@ public:
     wgm_feedbacks::enum_sub_sys_feedback ph_motion_move_to_center(double new_pos);
     wgm_feedbacks::enum_sub_sys_feedback ph_rotate_center();
     wgm_feedbacks::enum_sub_sys_feedback ph_move_center();
+    wgm_feedbacks::enum_sub_sys_feedback ph_trigger_print();
     wgm_feedbacks::enum_sub_sys_feedback ph_rotate_and_print();
     
     double get_center_target_distance();
@@ -62,13 +63,14 @@ public:
     /********* helper functions */
     bool get_linear_mover_status();
     bool get_rotary_mover_status();
+    bool get_trigger_status();
     bool get_ph_status();
     bool get_ph_cooling_controller_status();
     /*     helper getter */
     double get_axis_position();
     double get_rotation_position();
-    Iph_xy_motion* get_axis_ptr();
-    Iph_xy_motion* get_rotary_axis_ptr();
+    Iph_xy_motion* get_xy_axis_ptr();
+    ph_trigger* get_trigger_ptr();
     meteorAdapter* get_ph_ptr();
     void sendDirectCmdSensor(std::string& cmd);
     std::string sendDirectCmdAxis(std::string cmd);

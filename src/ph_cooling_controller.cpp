@@ -62,10 +62,10 @@ ph_cooling_controller::ph_cooling_controller()
     ph = std::make_shared< meteorAdapter>(_ph_params);
 
 
-    motionMover = std::make_shared< ph_xy_motion>(_ph_params.ph_motion_server_ip ,_ph_params.ph_motion_server_port);
+    motionMover = std::make_shared< ph_xy_motion>(_ph_params.ph_motion_server_ip, _ph_params.ph_motion_server_port);
 
 
-    phTrigger = std::make_shared< ph_trigger>(_ph_params.ph_trigger_server_ip,_ph_params.ph_trigger_server_port);
+    phTrigger = std::make_shared< ph_trigger>(_ph_params.ph_trigger_server_ip, _ph_params.ph_trigger_server_port);
 
 }
 /**
@@ -86,56 +86,61 @@ wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_connect_engine()
 
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_controller_connect()
 {
-    if (motionMover-> connect() == sub_error || phTrigger-> connect() == sub_error || ph->connect() == hw_error) return sub_error;
-    phCoolingControllerReady=true;
+    if (motionMover->connect() == sub_error || phTrigger->connect() == sub_error || ph->connect() == hw_error) return sub_error;
+    phCoolingControllerReady = true;
     return sub_success;
 }
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_controller_disconnect()
 {
-    if (motionMover-> disconnect() == sub_error || phTrigger-> disconnect() == sub_error || ph->disconnect() == hw_error) return sub_error;
-    phCoolingControllerReady=true;
+    if (motionMover->disconnect() == sub_error || phTrigger->disconnect() == sub_error || ph->disconnect() == hw_error) return sub_error;
+    phCoolingControllerReady = true;
     return sub_success;
 }
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_motion_home_all()
 {
-    if (motionMover->home_all() == sub_error ) return sub_error;
+    if (motionMover->home_all() == sub_error) return sub_error;
     return sub_success;
 }
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_motion_move_home()
 {
-    if (motionMover->move_home() == sub_error ) return sub_error;
+    if (motionMover->move_home() == sub_error) return sub_error;
     return sub_success;
 }
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_motion_move_offset()
 {
-    if (motionMover->move_down_to(50) == sub_error ) return sub_error;
+    if (motionMover->move_down_to(50) == sub_error) return sub_error;
     return sub_success;
 }
 
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_motion_rotate_home()
 {
-    if (motionMover->rotate_home() == sub_error ) return sub_error;
+    if (motionMover->rotate_home() == sub_error) return sub_error;
     return sub_success;
 }
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_motion_move_to_center(double new_pos)
 {
-return    motionMover->move_down_to(new_pos);
+    return    motionMover->move_down_to(new_pos);
 
 }
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_rotate_to_center(double new_pos)
 {
-return    motionMover->rotate_to(new_pos);
+    return    motionMover->rotate_to(new_pos);
 
 }
 
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_move_center()
 {
-return    motionMover->move_down_to(_ph_params.distance_to_center);
+    return    motionMover->move_down_to(_ph_params.distance_to_center);
 
 }
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_rotate_center()
 {
-return    motionMover->rotate_to(_ph_params.ph_rotate_to_center);
+    return    motionMover->rotate_to(_ph_params.ph_rotate_to_center);
+
+}
+wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_trigger_print()
+{
+    return    phTrigger->turn_on();
 
 }
 
@@ -143,14 +148,14 @@ wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_rotate_and_print(
 {
 
     /*
-    // rotate thread 
+    // rotate thread
     // print thread
     // Algoritm:
     1. start rotating freely:
     2. after 1 rev: start printing
     3. after 5 rev: stop printing and rotation
     */
-   
+
     phTrigger->turn_on();
     return sub_error;
 }
@@ -173,6 +178,10 @@ bool ph_cooling_controller::get_linear_mover_status()
 bool ph_cooling_controller::get_rotary_mover_status()
 {
     return motionMover->getStatus();
+}
+bool ph_cooling_controller::get_trigger_status()
+{
+    return phTrigger->getStatus();
 }
 bool ph_cooling_controller::get_ph_status()
 {
@@ -197,13 +206,13 @@ double ph_cooling_controller::get_rotation_position()
     return motionMover->get_rotation_position();
 }
 
-Iph_xy_motion* ph_cooling_controller::get_axis_ptr()
+Iph_xy_motion* ph_cooling_controller::get_xy_axis_ptr()
 {
     return dynamic_cast<Iph_xy_motion*>(motionMover.get());
 }
-Iph_xy_motion* ph_cooling_controller::get_rotary_axis_ptr()
+ph_trigger* ph_cooling_controller::get_trigger_ptr()
 {
-    return dynamic_cast<Iph_xy_motion*>(motionMover.get());
+    return dynamic_cast<ph_trigger*>(phTrigger.get());
 }
 meteorAdapter* ph_cooling_controller::get_ph_ptr()
 {
@@ -252,7 +261,7 @@ void ph_cooling_controller::reload_config_file()
     _ph_params.ph_rotation_server_port = config["ph_rotation_server_port"].as<uint16_t>();
     _ph_params.ph_trigger_server_ip = config["ph_trigger_server_ip"].as<std::string>();
     _ph_params.ph_trigger_server_port = config["ph_trigger_server_port"].as<uint16_t>();
- 
+
     // motion /rotation
     _ph_params.phead_travel = config["phead_travel"].as<double>();
     _ph_params.phead_max_travel = config["phead_max_travel"].as<double>();
