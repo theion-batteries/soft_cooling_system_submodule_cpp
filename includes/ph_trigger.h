@@ -38,12 +38,12 @@ class ph_trigger
 private:
     ph_trigger_server _trigger_struct;
     sockpp::socket_initializer sockInit;
-    sockpp::tcp_connector* trigger_client_sock = nullptr;
+    sockpp::tcp_connector* _client = nullptr;
     bool triggerReady = false;
     std::map<std::string, std::string> trigger_cmds = {
-        {"turn_on","trigger"}, {"turn_off","off"}
+        {"turn_on","trigger"}, {"turn_off","stop"}
     };
-    std::string trigger_incoming_data;
+    std::string incoming_data;
     size_t trigger_data_length = 5012;
 
 public:
@@ -52,6 +52,7 @@ public:
     wgm_feedbacks::enum_sub_sys_feedback disconnect();
     wgm_feedbacks::enum_sub_sys_feedback turn_on();
     wgm_feedbacks::enum_sub_sys_feedback turn_off();
+    bool getStatus();
     std::string sendDirectCmd(std::string cmd) ;
     std::string waitForResponse();
 };

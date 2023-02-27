@@ -25,7 +25,7 @@
 struct ph_rotation_motion_server
 {
     std::string ip = "192.168.0.205";
-    uint16_t port = 8881;
+    uint16_t port = 8882;
     double phead_intermediate_stop = 50;
     double phead_start_angle = 90;
     double phead_max_rot_speed = 100;
@@ -40,7 +40,7 @@ class ph_rotation_motion: public Iph_rotation
 private:
     ph_rotation_motion_server _rotation_motion_struct;
     sockpp::socket_initializer sockInit;
-    sockpp::tcp_connector* axis_client_sock = nullptr;
+    sockpp::tcp_connector* _client = nullptr;
     bool axisReady = false;
 protected:
     std::map<std::string, std::string> axis_cmds = {
@@ -49,7 +49,7 @@ protected:
         {"pause","!"}, {"resume","~"}
     };
     std::deque<double> axis_last_position; // FIFO last 10 values
-    std::string axis_incoming_data;
+    std::string incoming_data;
     size_t axis_data_length = 5012;
 public:
     ph_rotation_motion();
