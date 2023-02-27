@@ -13,11 +13,11 @@ docid: 1					# Default to a document ID of 1
 scanning: 0					# Default to not scanning
 
 ## imported ##
-ph_motion_server_ip: "192.168.0.205" # 192.168.0.209 "127.0.0.1"
+ph_motion_server_ip: "127.0.0.1" #"192.168.0.205" # "127.0.0.1"
 ph_motion_server_port: 8882
-ph_rotation_server_ip: "192.168.0.205" # 192.168.0.209 "127.0.0.1" # rotation /trigger
+ph_rotation_server_ip: "127.0.0.1" #"192.168.0.205" # "127.0.0.1" 
 ph_rotation_server_port: 8882
-ph_trigger_server_ip: "192.168.0.205" # 192.168.0.209 "127.0.0.1" # trigger /trigger
+ph_trigger_server_ip: "127.0.0.1" #"192.168.0.205" # "127.0.0.1" 
 ph_trigger_server_port: 8881
 phead_travel: 150                                          # used # how far the printhead will move, to be adjusted each try
 phead_max_travel: 220                                      # used # DO NOT CHANGE IF YOU DONT KNOW WHAT YOU#RE DOING
