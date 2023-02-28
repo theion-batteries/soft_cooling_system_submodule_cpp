@@ -56,7 +56,7 @@ public:
     virtual wgm_feedbacks::enum_sub_sys_feedback rotate_up_by(double_t steps) =0;
     virtual wgm_feedbacks::enum_sub_sys_feedback rotate_down_by(double_t steps) =0;
     virtual wgm_feedbacks::enum_sub_sys_feedback rotate_center() = 0;
-
+    virtual std::string get_settings() = 0;
 
 
 

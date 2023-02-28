@@ -33,6 +33,7 @@ struct ph_motion_server
     double phead_rotations = 5;
     double max_travel = 150          ;            //                    # used # how far the printhead will move, to be adjusted each try
     double phead_max_travel = 220       ;             //                  # used # DO NOT CHANGE IF YOU DONT KNOW WHAT YOU#RE DOING
+    uint16_t timeout = 10;
 
 };
 
@@ -54,7 +55,7 @@ protected:
 public:
     //generic
     ph_xy_motion(/* args */);
-    ph_xy_motion(std::string ip, uint16_t port);
+    ph_xy_motion(std::string ip, uint16_t port, const uint16_t timeout);
 
     virtual ~ph_xy_motion();
     wgm_feedbacks::enum_sub_sys_feedback connect() override;
@@ -91,8 +92,7 @@ public:
     wgm_feedbacks::enum_sub_sys_feedback rotate_down_by(double_t steps) override;
     wgm_feedbacks::enum_sub_sys_feedback rotate_center() override;
     wgm_feedbacks::enum_sub_sys_feedback set_rotation_Center_position(double new_target) ;
-
-
+    virtual std::string get_settings() override;
 
 };
 

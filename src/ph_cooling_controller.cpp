@@ -55,6 +55,7 @@ ph_cooling_controller::ph_cooling_controller()
     _ph_params.phead_max_rot_speed = config["phead_max_rot_speed"].as<double>();
     _ph_params.phead_intermediate_stop = config["phead_intermediate_stop"].as<double>();
     _ph_params.phead_start_angle = config["phead_start_angle"].as<double>();
+    _ph_params.timeout = config["timeout"].as<uint16_t>();
 
 #endif 
 
@@ -62,10 +63,10 @@ ph_cooling_controller::ph_cooling_controller()
     ph = std::make_shared< meteorAdapter>(_ph_params);
 
 
-    motionMover = std::make_shared< ph_xy_motion>(_ph_params.ph_motion_server_ip, _ph_params.ph_motion_server_port);
+    motionMover = std::make_shared< ph_xy_motion>(_ph_params.ph_motion_server_ip, _ph_params.ph_motion_server_port,_ph_params.timeout);
 
 
-    phTrigger = std::make_shared< ph_trigger>(_ph_params.ph_trigger_server_ip, _ph_params.ph_trigger_server_port);
+    phTrigger = std::make_shared< ph_trigger>(_ph_params.ph_trigger_server_ip, _ph_params.ph_trigger_server_port, _ph_params.timeout);
 
 }
 /**
@@ -271,4 +272,6 @@ void ph_cooling_controller::reload_config_file()
     _ph_params.phead_max_rot_speed = config["phead_max_rot_speed"].as<double>();
     _ph_params.phead_intermediate_stop = config["phead_intermediate_stop"].as<double>();
     _ph_params.phead_start_angle = config["phead_start_angle"].as<double>();
+    _ph_params.timeout = config["timeout"].as<uint16_t>();
+
 }

@@ -1,9 +1,10 @@
 #include "ph_trigger.h"
 
-ph_trigger::ph_trigger(std::string ip, uint16_t port)
+ph_trigger::ph_trigger(std::string ip, uint16_t port, const uint16_t timeout)
 {
     _trigger_struct.ip = ip;
     _trigger_struct.port = port;
+    _trigger_struct.timeout = timeout;
 
 }
 
@@ -59,6 +60,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_trigger::connect()
     std::cout << "connecting controller to trigger server" << std::endl;
     std::cout << "trigger server ip:  " << _trigger_struct.ip << std::endl;
     _client = new sockpp::tcp_connector({ _trigger_struct.ip, _trigger_struct.port });
+    _client->set_non_blocking();
     // Implicitly creates an inet_address from {host,port}
     // and then tries the connection.
     if (!_client->is_connected()) {

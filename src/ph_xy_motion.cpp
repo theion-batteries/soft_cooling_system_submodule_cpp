@@ -13,11 +13,12 @@
 #include <mutex>
 #include <string.h>
 
-ph_xy_motion::ph_xy_motion(std::string ip, uint16_t port)
+ph_xy_motion::ph_xy_motion(std::string ip, uint16_t port, const uint16_t timeout)
 {
     std::cout << "creating linear axis client" << std::endl;
     _motion_struct.ip = ip;
     _motion_struct.port = port;
+    _motion_struct.timeout = timeout;
 
 }
 ph_xy_motion::~ph_xy_motion()
@@ -32,6 +33,8 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::connect()
     std::cout << "connecting controller to axis server" << std::endl;
     std::cout << "axis server ip:  " << _motion_struct.ip << std::endl;
     _client = new sockpp::tcp_connector({ _motion_struct.ip, _motion_struct.port });
+    _client->set_non_blocking();
+
     // Implicitly creates an inet_address from {host,port}
     // and then tries the connection.
     if (!_client->is_connected()) {
@@ -166,7 +169,20 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::home_all()
     return sub_error;
 
 }
+std::string ph_xy_motion::get_settings()
+{
+    std::cout << "get axis curent speed" << std::endl;
+    auto command = axis_cmds.find("get_setting");
+    std::cout << "sending command: " << command->second << '\n';
 
+    auto resp = sendDirectCmd(command->second);
+    if (!resp.find("ok"))
+    {
+        std::cout << "missing ok, error" << std::endl;
+        return "NA";
+    }
+    return resp;
+}
 ///////////////// linear apis ////////////////////
 wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::set_linear_Center_position(double new_target)
 {

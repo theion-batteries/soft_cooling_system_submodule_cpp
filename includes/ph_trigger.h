@@ -29,6 +29,7 @@ struct ph_trigger_server
 {
     std::string ip = "192.168.0.205";
     uint16_t port = 8881;
+    uint16_t timeout = 10;
 
 };
 
@@ -47,7 +48,7 @@ private:
     size_t trigger_data_length = 5012;
 
 public:
-    ph_trigger(std::string ip, uint16_t port);
+    ph_trigger(std::string ip, uint16_t port, const uint16_t timeout);
     wgm_feedbacks::enum_sub_sys_feedback connect();
     wgm_feedbacks::enum_sub_sys_feedback disconnect();
     wgm_feedbacks::enum_sub_sys_feedback turn_on();
