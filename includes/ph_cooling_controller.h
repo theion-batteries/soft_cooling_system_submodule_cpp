@@ -68,7 +68,9 @@ public:
     bool get_ph_cooling_controller_status();
     /*     helper getter */
     double get_axis_position();
-    double get_rotation_position();
+    double get_rotation_position();    
+    double get_axis_velocity();
+    double get_rotation_velocity();
     Iph_xy_motion* get_xy_axis_ptr();
     ph_trigger* get_trigger_ptr();
     meteorAdapter* get_ph_ptr();

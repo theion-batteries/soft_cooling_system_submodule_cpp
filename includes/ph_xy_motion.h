@@ -31,8 +31,8 @@ struct ph_motion_server
     double phead_max_rot_speed = 100;
     double phead_max_rotations = 50;
     double phead_rotations = 5;
-    double max_travel = 150          ;            //                    # used # how far the printhead will move, to be adjusted each try
-    double phead_max_travel = 220       ;             //                  # used # DO NOT CHANGE IF YOU DONT KNOW WHAT YOU#RE DOING
+    double max_travel = 150;            //                    # used # how far the printhead will move, to be adjusted each try
+    double phead_max_travel = 220;             //                  # used # DO NOT CHANGE IF YOU DONT KNOW WHAT YOU#RE DOING
     uint16_t timeout = 10;
 
 };
@@ -44,6 +44,8 @@ private:
     sockpp::socket_initializer sockInit;
     sockpp::tcp_connector* _client = nullptr;
     bool axisReady = false;
+    std::vector<std::pair<double,double>> positionXY;
+    std::vector<std::pair<double,double>> velocityXY;
 protected:
     std::map<std::string, std::string> axis_cmds = {
         {"unlock","$X"}, {"get_position","?"}, {"rotate","Y"},{"move","X"},
@@ -51,7 +53,7 @@ protected:
         {"set_Yspeed","$111="},  {"pause","!"}, {"resume","~"},{"homeAll","$H"}
     };
     std::string incoming_data;
-    size_t axis_data_length = 5012;  
+    size_t axis_data_length = 5012;
 public:
     //generic
     ph_xy_motion(/* args */);
@@ -78,7 +80,7 @@ public:
     wgm_feedbacks::enum_sub_sys_feedback move_up_by(double_t steps) override;
     wgm_feedbacks::enum_sub_sys_feedback move_down_by(double_t steps) override;
     wgm_feedbacks::enum_sub_sys_feedback move_center() override;
-    wgm_feedbacks::enum_sub_sys_feedback set_linear_Center_position(double new_target) ;
+    wgm_feedbacks::enum_sub_sys_feedback set_linear_Center_position(double new_target);
 
     // roatation
     wgm_feedbacks::enum_sub_sys_feedback rotate_home() override;
@@ -91,9 +93,10 @@ public:
     wgm_feedbacks::enum_sub_sys_feedback rotate_up_by(double_t steps) override;
     wgm_feedbacks::enum_sub_sys_feedback rotate_down_by(double_t steps) override;
     wgm_feedbacks::enum_sub_sys_feedback rotate_center() override;
-    wgm_feedbacks::enum_sub_sys_feedback set_rotation_Center_position(double new_target) ;
+    wgm_feedbacks::enum_sub_sys_feedback set_rotation_Center_position(double new_target);
     virtual std::string get_settings() override;
-
+    virtual std::pair<double, double> get_xy_position()override;
+    virtual std::pair<double, double> get_xy_velocity()override;
 };
 
 

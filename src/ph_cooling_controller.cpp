@@ -206,6 +206,16 @@ double ph_cooling_controller::get_rotation_position()
 
     return motionMover->get_rotation_position();
 }
+double ph_cooling_controller::get_axis_velocity()
+{
+
+    return motionMover->get_linear_speed();
+}
+double ph_cooling_controller::get_rotation_velocity()
+{
+
+    return motionMover->get_rotation_speed();
+}
 
 Iph_xy_motion* ph_cooling_controller::get_xy_axis_ptr()
 {

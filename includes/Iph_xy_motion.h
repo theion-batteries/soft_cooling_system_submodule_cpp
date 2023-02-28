@@ -13,6 +13,8 @@
 #include <string>
 #include "sockpp/tcp_connector.h"
 #include <iostream>
+#include <utility> // for std::pair
+
 
 #include "subsystem_feedback.h"
 using enum wgm_feedbacks::enum_hw_feedback;
@@ -57,6 +59,9 @@ public:
     virtual wgm_feedbacks::enum_sub_sys_feedback rotate_down_by(double_t steps) =0;
     virtual wgm_feedbacks::enum_sub_sys_feedback rotate_center() = 0;
     virtual std::string get_settings() = 0;
+    // combined
+    virtual std::pair<double,double> get_xy_position() = 0;
+    virtual std::pair<double,double> get_xy_velocity() = 0;
 
 
 

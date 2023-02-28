@@ -565,7 +565,7 @@ double ph_xy_motion::get_rotation_speed()
     std::cout << "sending command: " << command->second << '\n';
 
     auto resp = sendDirectCmd(command->second);
-    if (!resp.find("ok"))
+    if (resp.find("ok") == std::string::npos)
     {
         std::cout << "missing ok, error" << std::endl;
         return 0;
@@ -610,4 +610,92 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::set_rotation_Center_position(
 {
     _motion_struct.phead_start_angle = new_target;
     return sub_success;
+}
+
+// combined 
+
+
+std::pair<double, double> ph_xy_motion::get_xy_position()
+{
+        _client->set_non_blocking(false);
+
+    double axis_pos = 0;
+    double rot_pos = 0;
+    std::cout << "get x,y curent position" << std::endl;
+    auto command = axis_cmds.find("get_position");
+    std::cout << "sending command: " << command->second << '\n';
+    std::string resp = sendDirectCmd(command->second);
+    std::string extracted = resp.substr(resp.find_first_of(",") + 1, resp.length()); // to extract second part
+    std::string x_pos = resp.substr(resp.find_first_of(":") + 1, resp.find_first_of(",") - 1 - resp.find_first_of(":"));
+    try
+    {
+        axis_pos = std::stod(x_pos); // to double
+        std::cout << "filter x val : " << axis_pos << std::endl;
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "Exception caught in getting x position " << __FILE__ << " " << __LINE__ << " " << e.what() << "\n";
+    }
+    std::string y_pos = extracted.substr(0, extracted.find_first_of(",") - 1);
+    try
+    {
+        rot_pos = std::stod(y_pos); // to double
+        std::cout << "filter y val : " << rot_pos << std::endl;
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "Exception caught in getting y position " << __FILE__ << " " << __LINE__ << " " << e.what() << "\n";
+    }
+    // add to vector
+    positionXY.push_back(std::make_pair(axis_pos, rot_pos));
+    _client->set_non_blocking(true);
+
+    return std::make_pair(axis_pos, rot_pos);
+
+}
+std::pair<double, double> ph_xy_motion::get_xy_velocity()
+{
+        _client->set_non_blocking(false);
+
+    double speedX = 0;
+    double speedY = 0;
+    std::cout << "get both axis speed" << std::endl;
+    auto command = axis_cmds.find("get_setting");
+    std::cout << "sending command: " << command->second << '\n';
+    auto resp = sendDirectCmd(command->second);
+    //$110=600.000
+    //$111=300.000
+    std::string extracted = [resp]() {
+        size_t foundX = resp.find("$110=");
+        size_t foundY = resp.find("$111=");
+        size_t foundZ = resp.find("$112=");
+        if (foundX != std::string::npos && foundY != std::string::npos && foundZ != std::string::npos) {
+            std::cout << " found X, Y and Z" << std::endl;
+            auto X = resp.substr(foundX + 5, foundY);
+            auto Y = resp.substr(foundY + 5, foundZ);
+            std::string pair = X + "," + Y;
+            return pair;
+
+        }
+        else {
+            std::cout << "x,Y and Z not found" << std::endl;
+            return std::string("0,0");
+        }
+    }(); // Note the added semicolon here to execute it directly
+    try
+    {
+        auto Xstr = extracted.substr(0, extracted.find_first_of(",") - 1);
+        auto Ystr = extracted.substr(extracted.find_first_of(",") + 1, extracted.length());
+        speedX = std::stod(Xstr); // to double
+        speedY = std::stod(Ystr); // to double
+        std::cout << "filter x val : " << speedX << std::endl;
+        std::cout << "filter y val : " << speedY << std::endl;
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "Exception caught in getting x, y velocity " << __FILE__ << " " << __LINE__ << " " << e.what() << "\n";
+    }
+    _client->set_non_blocking(true);
+    return std::make_pair(speedX, speedY);
+
 }
