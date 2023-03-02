@@ -7,7 +7,7 @@ protected:
     ph_xy_motion* motionObj ;
 
     void SetUp() override {
-       motionObj = new ph_xy_motion("127.0.0.1", 8882);
+       motionObj = new ph_xy_motion("127.0.0.1", 8882,10);
        motionObj->connect();
     }
 

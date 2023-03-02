@@ -7,7 +7,7 @@ protected:
     ph_trigger* phTrigger ;
 
     void SetUp() override {
-       phTrigger = new ph_trigger("127.0.0.1", 8881);
+       phTrigger = new ph_trigger("127.0.0.1", 8881,10);
        phTrigger->connect();
     }
 
