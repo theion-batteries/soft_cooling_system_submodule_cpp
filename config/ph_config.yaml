@@ -13,7 +13,7 @@ docid: 1					# Default to a document ID of 1
 scanning: 0					# Default to not scanning
 
 ## imported ##
-ph_motion_server_ip: "192.168.0.205" # "127.0.0.1"
+ph_motion_server_ip: "192.168.0.205" # "127.0.0.1" ph_motion_server_ip: "192.168.0.205"
 ph_motion_server_port: 8882
 ph_rotation_server_ip: "192.168.0.205" # "127.0.0.1" 
 ph_rotation_server_port: 8882
