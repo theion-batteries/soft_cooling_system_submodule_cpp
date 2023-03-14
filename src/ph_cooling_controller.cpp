@@ -170,8 +170,23 @@ wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_trigger_print()
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_rotate_and_print()
 {
 
+    // 2 algorithms could be used :
+    // 1- using raul setup
+    // we start rotating: to achieve the normal velocity -> after 1 revolution, it will be constant 
+    // 1 rev -> 10 mm if we send ? and receive 10mm or we just send move (6*10) ok (blocking is better)
+    // non blocking set -> send(n*10) -> get_positioon() ->if pos == 10 ->send trigger 
+    // if pos == 60 stop trigger
+    // after achieveing 1 rev  -> start/send trigger (start the print): start_trigger()
+    // when do we stop: after 5 rev: we send a trigger signal again to stop printing /stop here after 5 rev the rotation ->home that rotation
+    // 
+    
+
+
+
     /* TODO
-    // rotate thread
+    // 2-using full sdk integration
+
+    // rotate thread 
     // print thread
     // Algoritm:
     1. start rotating freely:
@@ -179,7 +194,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_rotate_and_print(
     3. after 5 rev: stop printing and rotation
     */
 
-    const double one_rotation = 360; // degrees to finish to one rotation
+   // const double one_rotation = 360; // degrees to finish to one rotation
     const double complete_roation = _ph_params.phead_rotations * one_rotation;
     //    const double home_rotation = -90;
     ph_xy_motion::setModeBlocking(true);
