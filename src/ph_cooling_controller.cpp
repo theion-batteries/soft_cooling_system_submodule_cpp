@@ -15,7 +15,8 @@ using enum wgm_feedbacks::enum_sub_sys_feedback;
 
 ph_cooling_controller::ph_cooling_controller()
 {
-    std::cout << "creating subsystem cooling ph controller " << "\n";
+    std::cout << "creating subsystem cooling ph controller "
+              << "\n";
 #ifdef PH_CONFIG
     std::cout << "loading config file: " << PH_CONFIG << "\n";
     std::ifstream filein(PH_CONFIG);
@@ -109,14 +110,6 @@ wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_motion_move_home(
     return sub_success;
 }
 
-/*wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_motion_move_offset()
-{
-    double offset_pos = 50; // offset position in mm
-    if (motionMover->move_down_to(offset_pos) == sub_error)
-        return sub_error;
-    return sub_success;
-}
-*/
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_motion_move_offset(const double offset)
 {
     if (motionMover->move_down_to(offset) == sub_error)
@@ -176,37 +169,30 @@ wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_rotate_and_print(
     ph_xy_motion::setModeBlocking(true);
     auto result = motionMover->rotate_to(one_rotation); // complete one rotation
     if (result == sub_error)
-     {
-        std::cout<<" Failed to rotate. exiting . \n";
+    {
+        std::cout << " Failed to rotate. exiting . \n";
         return sub_error;
-     }
+    }
 
     result = phTrigger->turn_on();
     if (result == sub_error)
-     {
-        std::cout<<" Failed to trigger. exiting . \n";
+    {
+        std::cout << " Failed to trigger. exiting . \n";
         return sub_error;
-     }
+    }
 
     ph_xy_motion::setModeBlocking(true);
     result = motionMover->rotate_to(complete_roation);
     if (result == sub_error)
-     {
-        std::cout<<" Failed to rotate complete number of turns. exiting. \n";
+    {
+        std::cout << " Failed to rotate complete number of turns. exiting. \n";
         return sub_error;
-     }
+    }
 
-/*    ph_xy_motion::setModeBlocking(true);
-    result = motionMover->rotate_to(home_rotation);
-    if (result == sub_error)
-     {
-        std::cout<<" Failed to rotate to home position. \n";
-        return sub_error;
-     } */
+ 
 
     return sub_success;
 }
-
 
 double ph_cooling_controller::get_center_target_distance()
 {
