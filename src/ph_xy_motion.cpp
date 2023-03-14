@@ -15,7 +15,8 @@
 
 ph_xy_motion::ph_xy_motion(std::string ip, uint16_t port, const uint16_t timeout)
 {
-    std::cout << "creating linear axis client" << "\n";
+    std::cout << "creating linear axis client"
+              << "\n";
     _motion_struct.ip = ip;
     _motion_struct.port = port;
     _motion_struct.timeout = timeout;
@@ -28,7 +29,11 @@ ph_xy_motion::~ph_xy_motion()
 
 wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::connect()
 {
-    std::cout << "connecting controller to axis server" << "\n";
+
+    if (_client != nullptr && _client->is_connected())
+        return sub_success;
+    std::cout << "connecting controller to axis server"
+              << "\n";
     std::cout << "axis server ip:  " << _motion_struct.ip << "\n";
     _client = new sockpp::tcp_connector({_motion_struct.ip, _motion_struct.port});
     _client->set_non_blocking();
@@ -69,6 +74,9 @@ std::string ph_xy_motion::sendDirectCmd(std::string cmd)
 {
     if (_client == nullptr)
         return "not connected";
+    if (blocking)
+        _client->set_non_blocking(false);
+
     std::cout << "sending  command " << cmd << "\n";
     cmd = cmd + "\r\n";
 
@@ -106,12 +114,14 @@ std::string ph_xy_motion::waitForResponse()
             if (duration >= _motion_struct.timeout)
             {
                 std::cout << "no response within a timeout of " << duration << " seconds, "
-                          << "aborting.." << "\n";
+                          << "aborting.."
+                          << "\n";
                 break;
             }
             continue;
         }
     }
+    blocking = true;
     _client->set_non_blocking(true);
 
     return incoming_data;
@@ -130,7 +140,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::unlock()
         std::cout << "sending command: " << command->second << '\n';
         auto reply = sendDirectCmd(command->second);
         std::cout << "unlock reply received " << reply << '\n';
-        if (reply == "ok")
+        if (reply.find("ok") != std::string::npos)
             return sub_success;
         return sub_error;
     }
@@ -145,7 +155,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::pause()
         std::cout << "sending command: " << command->second << '\n';
         auto reply = sendDirectCmd(command->second);
         std::cout << "unlock reply received " << reply << '\n';
-        if (reply == "ok")
+        if (reply.find("ok") != std::string::npos)
             return sub_success;
         return sub_error;
     }
@@ -160,7 +170,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::resume()
         std::cout << "sending command: " << command->second << '\n';
         auto reply = sendDirectCmd(command->second);
         std::cout << "unlock reply received " << reply << '\n';
-        if (reply == "ok")
+        if (reply.find("ok") != std::string::npos)
             return sub_success;
         return sub_error;
     }
@@ -169,13 +179,14 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::resume()
 
 wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::home_all()
 {
+    _client->set_non_blocking(false);
     auto command = axis_cmds.find("homeAll");
     if (command != axis_cmds.end())
     {
         std::cout << "sending command: " << command->second << '\n';
         auto reply = sendDirectCmd(command->second);
         std::cout << "move home reply received " << reply << '\n';
-        if (reply == "ok")
+        if (reply.find("ok") != std::string::npos)
             return sub_success;
         return sub_error;
     }
@@ -184,14 +195,16 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::home_all()
 
 std::string ph_xy_motion::get_settings()
 {
-    std::cout << "get axis curent speed" << "\n";
+    std::cout << "get axis curent speed"
+              << "\n";
     auto command = axis_cmds.find("get_setting");
     std::cout << "sending command: " << command->second << '\n';
 
     auto resp = sendDirectCmd(command->second);
     if (!resp.find("ok"))
     {
-        std::cout << "missing ok, error" << "\n";
+        std::cout << "missing ok, error"
+                  << "\n";
         return "NA";
     }
     return resp;
@@ -213,7 +226,8 @@ double ph_xy_motion::get_linear_position()
 {
     _client->set_non_blocking(false);
     double axis_pos = 0;
-    std::cout << "get axis curent position" << "\n";
+    std::cout << "get axis curent position"
+              << "\n";
     auto command = axis_cmds.find("get_position");
     std::cout << "sending command: " << command->second << '\n';
 
@@ -244,14 +258,16 @@ double ph_xy_motion::get_linear_position()
 double ph_xy_motion::get_linear_speed()
 {
     double speed = 0;
-    std::cout << "get axis curent spped" << "\n";
+    std::cout << "get axis curent spped"
+              << "\n";
     auto command = axis_cmds.find("get_setting");
     std::cout << "sending command: " << command->second << '\n';
 
     auto resp = sendDirectCmd(command->second);
     if (!resp.find("ok"))
     {
-        std::cout << "missing ok, error" << "\n";
+        std::cout << "missing ok, error"
+                  << "\n";
         return 0;
     }
     //$110=800.000
@@ -267,7 +283,8 @@ double ph_xy_motion::get_linear_speed()
         }
         else
         {
-            std::cout << "Substring not found" << "\n";
+            std::cout << "Substring not found"
+                      << "\n";
             return std::string("0");
         }
     }();                          // Note the added semicolon here
@@ -278,7 +295,8 @@ double ph_xy_motion::get_linear_speed()
 
 wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::set_Xspeed(const double_t new_val)
 {
-    std::cout << "set  axis curent spped" << "\n";
+    std::cout << "set  axis curent spped"
+              << "\n";
     auto command = axis_cmds.find("set_Xspeed");
     if (command != axis_cmds.end())
     {
@@ -287,7 +305,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::set_Xspeed(const double_t new
         auto cmd = (command->second) + args;
         // X-new_val
         auto reply = sendDirectCmd(cmd);
-        if (reply == "ok")
+        if (reply.find("ok") != std::string::npos)
             return sub_success;
         std::cout << "rotate down reply received " << reply << '\n';
         return sub_error;
@@ -330,7 +348,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::move_home()
         std::cout << "sending command: " << command->second << '\n';
         auto reply = sendDirectCmd(command->second);
         std::cout << "move home reply received " << reply << '\n';
-        if (reply == "ok")
+        if (reply.find("ok") != std::string::npos)
             return sub_success;
         return sub_error;
     }
@@ -348,7 +366,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::move_up_to(const double_t new
         auto cmd = (command->second) + args;
         // X-new_pos
         auto reply = sendDirectCmd(cmd);
-        if (reply == "ok")
+        if (reply.find("ok") != std::string::npos)
             return sub_success;
         std::cout << "move down reply received " << reply << '\n';
         return sub_error;
@@ -367,7 +385,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::move_down_to(const double_t n
         auto cmd = (command->second) + args;
         // X-Steps
         auto reply = sendDirectCmd(cmd);
-        if (reply == "ok")
+        if (reply.find("ok") != std::string::npos)
             return sub_success;
         std::cout << "move down reply received " << reply << '\n';
         return sub_error;
@@ -391,7 +409,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::move_up_by(const double_t ste
         auto cmd = (command->second) + args;
         // X-Steps
         auto reply = sendDirectCmd(cmd);
-        if (reply == "ok")
+        if (reply.find("ok") != std::string::npos)
             return sub_success;
         std::cout << "move down reply received " << reply << '\n';
         return sub_error;
@@ -417,7 +435,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::move_down_by(const double_t s
         // X-Steps
         auto reply = sendDirectCmd(cmd);
         std::cout << "move down reply received " << reply << '\n';
-        if (reply == "ok")
+        if (reply.find("ok") != std::string::npos)
             return sub_success;
         return sub_error;
     }
@@ -434,7 +452,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::move_center()
         std::cout << "move center reply received " << reply << '\n';
         std::string args = std::to_string(-_motion_struct.phead_start_angle);
         auto cmd = (command->second) + args;
-        if (reply == "ok")
+        if (reply.find("ok") != std::string::npos)
             return sub_success;
         return sub_error;
     }
@@ -463,15 +481,13 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::rotate_to(const double degree
     {
         if (rotate_down_to(abs(degree)) == sub_success)
             return sub_success;
-        return sub_error;
-    }
+     }
     else
     {
         if (rotate_up_to(abs(degree)) == sub_success)
             return sub_success;
-        return sub_error;
-    }
-
+     }
+    std::cout<<" Error in rotating to  "<<degree<<"\n";
     return sub_error;
 }
 
@@ -487,7 +503,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::rotate_home()
         std::cout << "sending command: " << command->second << '\n';
         auto reply = sendDirectCmd(command->second);
         std::cout << "rotate home reply received " << reply << '\n';
-        if (reply == "ok")
+        if (reply.find("ok") != std::string::npos)
             return sub_success;
         return sub_error;
     }
@@ -562,7 +578,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::rotate_center()
         std::cout << "rotate center reply received " << reply << '\n';
         std::string args = std::to_string(-_motion_struct.phead_start_angle);
         auto cmd = (command->second) + args;
-        if (reply == "ok")
+        if (reply.find("ok") != std::string::npos)
             return sub_success;
         return sub_error;
     }
@@ -576,8 +592,11 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::rotate_center()
  */
 double ph_xy_motion::get_rotation_position()
 {
+    _client->set_non_blocking(false);
+
     double axis_pos = 0;
-    std::cout << "get axis curent position" << "\n";
+    std::cout << "get axis curent position"
+              << "\n";
     auto command = axis_cmds.find("get_position");
     std::cout << "sending command: " << command->second << '\n';
 
@@ -592,15 +611,18 @@ double ph_xy_motion::get_rotation_position()
 
 double ph_xy_motion::get_rotation_speed()
 {
+    _client->set_non_blocking(false);
     double speed = 0;
-    std::cout << "get axis curent spped" << "\n";
+    std::cout << "get axis curent spped"
+              << "\n";
     auto command = axis_cmds.find("get_setting");
     std::cout << "sending command: " << command->second << '\n';
 
     auto resp = sendDirectCmd(command->second);
     if (resp.find("ok") == std::string::npos)
     {
-        std::cout << "missing ok, error" << "\n";
+        std::cout << "missing ok, error"
+                  << "\n";
         return 0;
     }
     //$110=800.000
@@ -616,7 +638,8 @@ double ph_xy_motion::get_rotation_speed()
         }
         else
         {
-            std::cout << "Substring not found" << "\n";
+            std::cout << "Substring not found"
+                      << "\n";
             return std::string("0");
         }
     }();                          // Note the added semicolon here
@@ -627,7 +650,8 @@ double ph_xy_motion::get_rotation_speed()
 
 wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::set_Yspeed(const double_t new_val)
 {
-    std::cout << "set  axis curent spped" << "\n";
+    std::cout << "set  axis curent spped"
+              << "\n";
     auto command = axis_cmds.find("set_Yspeed");
     if (command != axis_cmds.end())
     {
@@ -636,7 +660,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::set_Yspeed(const double_t new
         auto cmd = (command->second) + args;
         // X-new_val
         auto reply = sendDirectCmd(cmd);
-        if (reply == "ok")
+        if (reply.find("ok") != std::string::npos)
             return sub_success;
         std::cout << "rotate down reply received " << reply << '\n';
         return sub_error;
@@ -658,7 +682,8 @@ std::pair<double, double> ph_xy_motion::get_xy_position()
 
     double axis_pos = 0;
     double rot_pos = 0;
-    std::cout << "get x,y curent position" << "\n";
+    std::cout << "get x,y curent position   123456 "
+              << "\n";
     auto command = axis_cmds.find("get_position");
     std::cout << "sending command: " << command->second << '\n';
     std::string resp = sendDirectCmd(command->second);
@@ -695,7 +720,8 @@ std::pair<double, double> ph_xy_motion::get_xy_velocity()
 
     double speedX = 0;
     double speedY = 0;
-    std::cout << "get both axis speed" << "\n";
+    std::cout << "get both axis speed"
+              << "\n";
     auto command = axis_cmds.find("get_setting");
     std::cout << "sending command: " << command->second << '\n';
     auto resp = sendDirectCmd(command->second);
@@ -708,7 +734,8 @@ std::pair<double, double> ph_xy_motion::get_xy_velocity()
         size_t foundZ = resp.find("$112=");
         if (foundX != std::string::npos && foundY != std::string::npos && foundZ != std::string::npos)
         {
-            std::cout << " found X, Y and Z" << "\n";
+            std::cout << " found X, Y and Z"
+                      << "\n";
             auto X = resp.substr(foundX + 5, foundY);
             auto Y = resp.substr(foundY + 5, foundZ);
             std::string pair = X + "," + Y;
@@ -716,7 +743,8 @@ std::pair<double, double> ph_xy_motion::get_xy_velocity()
         }
         else
         {
-            std::cout << "x,Y and Z not found" << "\n";
+            std::cout << "x,Y and Z not found"
+                      << "\n";
             return std::string("0,0");
         }
     }(); // Note the added semicolon here to execute it directly
@@ -737,8 +765,8 @@ std::pair<double, double> ph_xy_motion::get_xy_velocity()
     return std::make_pair(speedX, speedY);
 }
 
-
 void ph_xy_motion::setModeBlocking(bool setblockingMode)
 {
-    if (setblockingMode) blocking = false;
+    if (setblockingMode)
+        blocking = false;
 }

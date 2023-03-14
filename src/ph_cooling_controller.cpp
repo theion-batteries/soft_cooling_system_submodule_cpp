@@ -83,35 +83,51 @@ wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_connect_engine()
 
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_controller_connect()
 {
-    if (motionMover->connect() == sub_error || phTrigger->connect() == sub_error /*|| ph->connect() == hw_error*/)
+    if (motionMover->connect() == sub_error)
+    {
+        std::cout << " Motion axis connection error \n";
         return sub_error;
+    }
+    else if (phTrigger->connect() == sub_error)
+    {
+        std::cout << " Trigger  connection error \n";
+        return sub_error;
+    }
     phCoolingControllerReady = true;
     return sub_success;
 }
 
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_controller_disconnect()
 {
-    if (motionMover->disconnect() == sub_error || phTrigger->disconnect() == sub_error || ph->disconnect() == hw_error)
+    if (motionMover->disconnect() == sub_error || phTrigger->disconnect() == sub_error /* || ph->disconnect() == hw_error*/)
         return sub_error;
     phCoolingControllerReady = false;
     return sub_success;
 }
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_motion_home_all()
 {
+    ph_xy_motion::setModeBlocking(true);
     if (motionMover->home_all() == sub_error)
+    {
+        std::cout << " Error in Motion home all \n";
         return sub_error;
+    }
     return sub_success;
 }
 
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_motion_move_home()
 {
     if (motionMover->move_home() == sub_error)
+    {
+        std::cout << " Error in Motion move home \n";
         return sub_error;
+    }
     return sub_success;
 }
 
 wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_motion_move_offset(const double offset)
 {
+    ph_xy_motion::setModeBlocking(false);
     if (motionMover->move_down_to(offset) == sub_error)
         return sub_error;
     return sub_success;
@@ -165,19 +181,12 @@ wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_rotate_and_print(
 
     const double one_rotation = 360; // degrees to finish to one rotation
     const double complete_roation = _ph_params.phead_rotations * one_rotation;
-    const double home_rotation = -90;
+    //    const double home_rotation = -90;
     ph_xy_motion::setModeBlocking(true);
     auto result = motionMover->rotate_to(one_rotation); // complete one rotation
     if (result == sub_error)
     {
         std::cout << " Failed to rotate. exiting . \n";
-        return sub_error;
-    }
-
-    result = phTrigger->turn_on();
-    if (result == sub_error)
-    {
-        std::cout << " Failed to trigger. exiting . \n";
         return sub_error;
     }
 
@@ -189,7 +198,12 @@ wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_rotate_and_print(
         return sub_error;
     }
 
- 
+    result = phTrigger->turn_on();
+    if (result == sub_error)
+    {
+        std::cout << " Failed to trigger. exiting . \n";
+        return sub_error;
+    }
 
     return sub_success;
 }

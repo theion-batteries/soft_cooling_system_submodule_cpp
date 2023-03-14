@@ -48,7 +48,8 @@ std::string ph_trigger::waitForResponse()
             if (duration >= timeout)
             {
                 std::cout << "no response within a timeout of " << duration << " seconds, "
-                          << "aborting.." << "\n";
+                          << "aborting.."
+                          << "\n";
                 break;
             }
             continue;
@@ -60,7 +61,10 @@ std::string ph_trigger::waitForResponse()
 }
 wgm_feedbacks::enum_sub_sys_feedback ph_trigger::connect()
 {
-    std::cout << "connecting controller to trigger server" << "\n";
+    if (_client != nullptr && _client->is_connected())
+        return sub_success;
+    std::cout << "connecting controller to trigger server"
+              << "\n";
     std::cout << "trigger server ip:  " << _trigger_struct.ip << "\n";
     _client = new sockpp::tcp_connector({_trigger_struct.ip, _trigger_struct.port});
     _client->set_non_blocking();
@@ -103,7 +107,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_trigger::turn_on()
         std::cout << "sending command: " << command->second << '\n';
         auto reply = sendDirectCmd(command->second);
         std::cout << " reply received " << reply << '\n';
-        if (reply.find("ok")!=std::string::npos)
+        if (reply.find("ok") != std::string::npos)
             return sub_success;
         return sub_error;
     }
@@ -118,7 +122,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_trigger::turn_off()
         std::cout << "sending command: " << command->second << '\n';
         auto reply = sendDirectCmd(command->second);
         std::cout << " reply received " << reply << '\n';
-        if (reply.find("ok")!=std::string::npos)
+        if (reply.find("ok") != std::string::npos)
             return sub_success;
         return sub_error;
     }
