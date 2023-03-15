@@ -194,7 +194,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_cooling_controller::ph_rotate_and_print(
     3. after 5 rev: stop printing and rotation
     */
 
-   // const double one_rotation = 360; // degrees to finish to one rotation
+    const double one_rotation = 360; // degrees to finish to one rotation
     const double complete_roation = _ph_params.phead_rotations * one_rotation;
     //    const double home_rotation = -90;
     ph_xy_motion::setModeBlocking(true);
