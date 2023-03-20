@@ -36,6 +36,7 @@ public:
     virtual wgm_feedbacks::enum_sub_sys_feedback resume() =0;
     virtual wgm_feedbacks::enum_sub_sys_feedback home_all() =0;
 
+
     // linear
     virtual wgm_feedbacks::enum_sub_sys_feedback move_home() = 0;
     virtual wgm_feedbacks::enum_sub_sys_feedback move_to(double new_position) = 0;
@@ -49,14 +50,14 @@ public:
     virtual wgm_feedbacks::enum_sub_sys_feedback move_center() = 0;
     // roatation
     virtual wgm_feedbacks::enum_sub_sys_feedback rotate_home() = 0;
-    virtual wgm_feedbacks::enum_sub_sys_feedback rotate_to(double new_position) = 0;
+    virtual wgm_feedbacks::enum_sub_sys_feedback rotate_to(double degree) = 0;
     virtual double get_linear_position() = 0;
     virtual double get_linear_speed() =0;
-    virtual wgm_feedbacks::enum_sub_sys_feedback set_Yspeed(double_t new_val) =0;
-    virtual wgm_feedbacks::enum_sub_sys_feedback rotate_up_to(double_t new_pos) =0;
-    virtual wgm_feedbacks::enum_sub_sys_feedback rotate_down_to(double_t new_pos) =0;
-    virtual wgm_feedbacks::enum_sub_sys_feedback rotate_up_by(double_t steps) =0;
-    virtual wgm_feedbacks::enum_sub_sys_feedback rotate_down_by(double_t steps) =0;
+    virtual wgm_feedbacks::enum_sub_sys_feedback set_Yspeed(double_t degree) =0;
+    virtual wgm_feedbacks::enum_sub_sys_feedback rotate_up_to(double_t degree) =0;
+    virtual wgm_feedbacks::enum_sub_sys_feedback rotate_down_to(double_t degree) =0;
+    virtual wgm_feedbacks::enum_sub_sys_feedback rotate_up_by(double_t degree) =0;
+    virtual wgm_feedbacks::enum_sub_sys_feedback rotate_down_by(double_t degree) =0;
     virtual wgm_feedbacks::enum_sub_sys_feedback rotate_center() = 0;
     virtual std::string get_settings() = 0;
     // combined

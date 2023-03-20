@@ -53,6 +53,7 @@ def run_server():
 
             while True:
                 data = c.recv(5012)
+                print("DATA", data)
                 if not data:
                     # Connection lost, break out of inner loop and reconnect
                     print("Connection lost, reconnecting...")
@@ -75,6 +76,11 @@ def run_server():
                     print(f"received: {data}")
                     print(f"sent: ok")
                     c.send(b'ok')
+
+                elif data == b'Y2.50000\r\n':         
+                    print(f"received: {data}")
+                    print(f"sent: ok")
+                    c.send(b'ok')                    
                 elif data == b'Y90\r\n':         
                     print(f"received: {data}")
                     print(f"sent: ok")

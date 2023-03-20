@@ -51,22 +51,24 @@ protected:
     std::deque<double> axis_last_position; // FIFO last 10 values
     std::string incoming_data;
     size_t axis_data_length = 5012;
+    
+
 public:
     ph_rotation_motion();
     ph_rotation_motion(std::string ip, uint16_t port);
     virtual ~ph_rotation_motion();
     virtual wgm_feedbacks::enum_sub_sys_feedback rotate_home() override;
-    virtual wgm_feedbacks::enum_sub_sys_feedback rotate_to(double new_position) override;
+    virtual wgm_feedbacks::enum_sub_sys_feedback rotate_to(const double new_position) override;
     virtual wgm_feedbacks::enum_sub_sys_feedback connect()override;
     virtual wgm_feedbacks::enum_sub_sys_feedback disconnect() override;
     double get_position() override;
     double get_speed() override;
-    wgm_feedbacks::enum_sub_sys_feedback set_speed(double_t new_val) override;
-    wgm_feedbacks::enum_sub_sys_feedback rotate_up_to(double_t new_pos) override;
-    wgm_feedbacks::enum_sub_sys_feedback rotate_down_to(double_t new_pos) override;
-    wgm_feedbacks::enum_sub_sys_feedback rotate_up_by(double_t steps) override;
-    wgm_feedbacks::enum_sub_sys_feedback rotate_down_by(double_t steps) override;
-    wgm_feedbacks::enum_sub_sys_feedback set_center_position(double new_target) ;
+    wgm_feedbacks::enum_sub_sys_feedback set_speed(const double_t new_val) override;
+    wgm_feedbacks::enum_sub_sys_feedback rotate_up_to(const double_t new_pos) override;
+    wgm_feedbacks::enum_sub_sys_feedback rotate_down_to(const double_t new_pos) override;
+    wgm_feedbacks::enum_sub_sys_feedback rotate_up_by(const double_t steps) override;
+    wgm_feedbacks::enum_sub_sys_feedback rotate_down_by(const double_t steps) override;
+    wgm_feedbacks::enum_sub_sys_feedback set_center_position(const double new_target) ;
     virtual bool getStatus() override;
     virtual std::string sendDirectCmd(std::string cmd) override;
     std::string waitForResponse();

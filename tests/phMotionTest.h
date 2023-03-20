@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <gtest/gtest_prod.h>
 
 #include "ph_xy_motion.h"
 
@@ -15,6 +16,7 @@ protected:
        motionObj->disconnect();
         delete motionObj;
     }
+private:
 };
 
 TEST_F(phMotionTest, Connect) {
@@ -32,23 +34,28 @@ TEST_F(phMotionTest, MoveHome) {
 }
 
 
-TEST_F(phMotionTest, get_linear_speed) {
+TEST_F(phMotionTest, GetLinearSpeed) {
     EXPECT_EQ(800, motionObj->get_linear_speed());
 }
-TEST_F(phMotionTest, set_linear_speed) {
+TEST_F(phMotionTest, SetLinearSpeed) {
     EXPECT_EQ(sub_success, motionObj->set_Xspeed(100));
 }
-TEST_F(phMotionTest, get_linear_position) {
+TEST_F(phMotionTest, GetLinearPosition) {
     EXPECT_EQ(-100, motionObj->get_linear_position());
 }
-TEST_F(phMotionTest, get_rotation_speed) {
-    EXPECT_EQ(800, motionObj->get_rotation_speed());
+TEST_F(phMotionTest, GetRotationSpeed) {
+    EXPECT_DOUBLE_EQ(500.000, motionObj->get_rotation_speed());
 }
-TEST_F(phMotionTest, set_rotation_speed) {
+TEST_F(phMotionTest, SetRotationSpeed) {
     EXPECT_EQ(sub_success, motionObj->set_Yspeed(100));
 }
-TEST_F(phMotionTest, get_rotation_position) {
-    EXPECT_EQ(-100, motionObj->get_rotation_position());
+TEST_F(phMotionTest, GetRotationPosition) {
+    EXPECT_DOUBLE_EQ(50, motionObj->get_rotation_position());
+}
+
+TEST_F(phMotionTest, RotatateTo) {
+    EXPECT_EQ(sub_success, motionObj->rotate_to(90));
+        EXPECT_EQ(sub_success, motionObj->rotate_to(180));
 }
 
 TEST_F(phMotionTest, MoveCenter) {
