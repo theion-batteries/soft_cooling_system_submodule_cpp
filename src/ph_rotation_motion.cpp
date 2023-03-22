@@ -175,7 +175,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_rotation_motion::rotate_home()
         std::cout << "sending command: " << command->second << '\n';
         auto reply = sendDirectCmd(command->second);
         std::cout << "rotate home reply received " << reply << '\n';
-        if (reply == "ok") return sub_success;
+        if (reply.find("ok") != std::string::npos) return sub_success;
         return sub_error;
     }
     return sub_error;
@@ -226,7 +226,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_rotation_motion::set_speed(double_t new_
         auto cmd = (command->second) + args;
         // X-new_val
         auto reply = sendDirectCmd(cmd);
-        if (reply == "ok") return sub_success;
+        if (reply.find("ok") != std::string::npos) return sub_success;
         std::cout << "rotate down reply received " << reply << '\n';
         return sub_error;
     }
@@ -242,7 +242,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_rotation_motion::rotate_up_to(double_t n
         auto cmd = (command->second) + args;
         // X-new_pos
         auto reply = sendDirectCmd(cmd);
-        if (reply == "ok") return sub_success;
+        if (reply.find("ok") != std::string::npos) return sub_success;
         std::cout << "rotate down reply received " << reply << '\n';
         return sub_error;
     }
@@ -258,7 +258,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_rotation_motion::rotate_down_to(double_t
         auto cmd = (command->second) + args;
         // X-Steps
         auto reply = sendDirectCmd(cmd);
-        if (reply == "ok") return sub_success;
+        if (reply.find("ok") != std::string::npos) return sub_success;
         std::cout << "rotate down reply received " << reply << '\n';
         return sub_error;
     }
@@ -279,7 +279,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_rotation_motion::rotate_up_by(double_t s
         auto cmd = (command->second) + args;
         // X-Steps
         auto reply = sendDirectCmd(cmd);
-        if (reply == "ok") return sub_success;
+        if (reply.find("ok") != std::string::npos) return sub_success;
         std::cout << "rotate down reply received " << reply << '\n';
         return sub_error;
     }
@@ -303,7 +303,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_rotation_motion::rotate_down_by(double_t
         // X-Steps
         auto reply = sendDirectCmd(cmd);
         std::cout << "rotate down reply received " << reply << '\n';
-        if (reply == "ok") return sub_success;
+        if (reply.find("ok") != std::string::npos) return sub_success;
         return sub_error;
     }
     return sub_error;
@@ -322,7 +322,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_rotation_motion::rotate_center()
         std::cout << "rotate center reply received " << reply << '\n';
         std::string args = std::to_string(-_rotation_motion_struct.phead_start_angle);
         auto cmd = (command->second) + args;
-        if (reply == "ok") return sub_success;
+        if (reply.find("ok") != std::string::npos) return sub_success;
         return sub_error;
     }
     return sub_error;
@@ -335,7 +335,7 @@ wgm_feedbacks::enum_sub_sys_feedback ph_rotation_motion::unlock()
         std::cout << "sending command: " << command->second << '\n';
         auto reply = sendDirectCmd(command->second);
         std::cout << "unlock reply received " << reply << '\n';
-        if (reply == "ok") return sub_success;
+        if (reply.find("ok") != std::string::npos) return sub_success;
         return sub_error;
     }
     return sub_error;
