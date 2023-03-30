@@ -28,4 +28,4 @@ phead_max_rot_speed: 100                                   # used # maximum spee
 
 phead_intermediate_stop: 50                                # so printhead will stop here, rotate the angle defined by the following parameter, and keep going.
 phead_start_angle: 90                                      # before moving the printhead to the cooling surface, it needs to be rotated.
-timeout: 10  
+timeout: 30  

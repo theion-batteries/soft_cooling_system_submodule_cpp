@@ -386,7 +386,18 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::move_down_to(const double_t n
         // X-Steps
         auto reply = sendDirectCmd(cmd);
         if (reply.find("ok") != std::string::npos)
+        {
+            std::cout << "move down reply received " << reply << '\n';
+             while (true)
+            {
+            auto position = get_xy_position();
+                if(abs(position.first)== abs(new_pos)) {
+                    break;
+                }
+                std::cout << position.first << " " << abs(new_pos) << "\n";
+            }
             return sub_success;
+        }
         std::cout << "move down reply received " << reply << '\n';
         return sub_error;
     }
@@ -522,8 +533,19 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::rotate_up_to(const double_t d
         // X-new_pos
         auto reply = sendDirectCmd(cmd);
         if (reply.find("ok") != std::string::npos)
+        {
+            std::cout << "rotate up reply received " << reply << '\n';
+             while (true)
+            {
+            auto position = get_xy_position();
+                if(abs(position.second)== abs(degree)) {
+                    break;
+                }
+                std::cout << position.second << " " << abs(degree) << "\n";
+            }
             return sub_success;
-        std::cout << "rotate down reply received " << reply << '\n';
+        }
+        std::cout << "rotate up reply received " << reply << '\n';
         return sub_error;
     }
     return sub_error;
@@ -541,8 +563,18 @@ wgm_feedbacks::enum_sub_sys_feedback ph_xy_motion::rotate_down_to(const double_t
         // X-Steps
         auto reply = sendDirectCmd(cmd);
         if (reply.find("ok") != std::string::npos)
+        {
+            std::cout << "rotate down reply received " << reply << '\n';
+             while (true)
+            {
+            auto position = get_xy_position();
+                if(abs(position.second)== abs(degree)) {
+                    break;
+                }
+                std::cout << position.second << " " << abs(degree) << "\n";
+            }
             return sub_success;
-        std::cout << "rotate down reply received " << reply << '\n';
+        }
         return sub_error;
     }
     return sub_error;
